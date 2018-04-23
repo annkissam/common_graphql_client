@@ -12,7 +12,7 @@ defmodule CommonGraphQLClient.Client do
         unquote(otp_app) |> Application.get_env(unquote(mod), [])
       end
       @config_with_key fn key -> @config.() |> Keyword.get(key) end
-      @caller @config_with_key.(:caller) || Module.concat([unquote(mod), Caller, Websocket])
+      @caller @config_with_key.(:caller) || CommonGraphQLClient.Caller.Websocket
 
       def config do
         unquote(otp_app)
@@ -51,7 +51,6 @@ defmodule CommonGraphQLClient.Client do
         "expected the #{var} environment variable to be set"
       end
 
-
       def api_token do
         config(:api_token)
       end
@@ -60,14 +59,31 @@ defmodule CommonGraphQLClient.Client do
         config(:api_url)
       end
 
+      def mod do
+        unquote(mod)
+      end
+
       @impl CommonGraphQLClient.ClientBehaviour
       def list(term), do: handle(:list, term)
 
       @impl CommonGraphQLClient.ClientBehaviour
       def list!(term) do
         case list(term) do
-          {:ok, resource} ->
-            resource
+          {:ok, resources} ->
+            resources
+          {:error, errors} ->
+            raise "#{inspect errors}"
+        end
+      end
+
+      @impl CommonGraphQLClient.ClientBehaviour
+      def list_by(term, variables), do: handle(:list_by, term, variables)
+
+      @impl CommonGraphQLClient.ClientBehaviour
+      def list_by!(term, variables) do
+        case list_by(term, variables) do
+          {:ok, resources} ->
+            resources
           {:error, errors} ->
             raise "#{inspect errors}"
         end
@@ -110,9 +126,13 @@ defmodule CommonGraphQLClient.Client do
         handle_subscribe_to(subscription_name, mod)
       end
 
-      defdelegate supervisor(), to: @caller
+      def supervisor() do
+        @caller.supervisor(__MODULE__)
+      end
 
-      defdelegate post(query, variables \\ %{}), to: @caller
+      def post(query, variables \\ %{}) do
+        @caller.post(__MODULE__, query, variables)
+      end
 
       defp do_post(term, schema, query, variables \\ %{}) do
         query
@@ -120,22 +140,25 @@ defmodule CommonGraphQLClient.Client do
         |> resolve_response(Atom.to_string(term), schema)
       end
 
-      defdelegate subscribe(term, callback, query, variables \\ %{}), to: @caller
+      def subscribe(term, callback, query, variables \\ %{}) do
+        @caller.subscribe(__MODULE__, term, callback, query, variables)
+      end
 
       defp do_subscribe(mod, term, schema, query, variables \\ %{}) do
         callback = fn(result) ->
-          {:ok, resource} = result
+          {:ok, resource} = {:ok, result}
                             |> resolve_response(Atom.to_string(term), schema)
 
-                            apply(mod, :receive, [term, resource])
+          apply(mod, :receive, [term, resource])
         end
 
         subscribe(term, callback, query, variables)
       end
 
+      defp handle(action, term), do: raise "No handler for (#{action}, #{term})"
+      defp handle(action, term, variables), do: raise "No hander for (#{action}, #{term}, #{variables})"
 
-      defp handle(action, term), do: raise "NO"
-      defp handle(action, term, variables), do: raise "NO"
+      defp handle_subscribe_to(subscription_name, mod), do: raise "No subscription handler for (#{subscription_name}, #{mod})"
 
       def resolve_response({:ok, data}, key, schema) do
         data = data
@@ -156,7 +179,7 @@ defmodule CommonGraphQLClient.Client do
         |> Ecto.Changeset.apply_changes()
       end
 
-      defoverridable [handle: 2, handle: 3]
+      defoverridable [handle: 2, handle: 3, handle_subscribe_to: 2]
     end
   end
 

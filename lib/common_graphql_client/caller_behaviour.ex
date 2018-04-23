@@ -8,8 +8,8 @@ defmodule CommonGraphQLClient.CallerBehaviour do
 
   """
 
-  @callback post(query :: String.t(), variables :: keyword()) :: any
-  @callback subscribe(subscription_name :: atom(), callback :: fun(), query :: String.t(), variables :: keyword()) :: any
-  @callback supervisor() :: {atom(), any} | no_return()
+  @callback post(client :: any, query :: String.t(), variables :: keyword()) :: any
+  @callback subscribe(client :: any, subscription_name :: atom(), callback :: fun(), query :: String.t(), variables :: keyword()) :: any
+  @callback supervisor(client :: any) :: {atom(), any} | no_return()
 end
 
