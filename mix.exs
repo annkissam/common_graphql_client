@@ -7,7 +7,8 @@ defmodule CommonGraphqlClient.MixProject do
       version: "0.1.1",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases(),
     ]
   end
 
@@ -23,5 +24,14 @@ defmodule CommonGraphqlClient.MixProject do
     [
       {:ecto, "~> 2.2"},
     ]
+  end
+
+  defp aliases do
+    ["publish": [&git_tag/1]]
+  end
+
+  defp git_tag(_args) do
+    System.cmd "git", ["tag", "v" <> Mix.Project.config[:version]]
+    System.cmd "git", ["push", "--tags"]
   end
 end
