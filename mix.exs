@@ -23,6 +23,7 @@ defmodule CommonGraphqlClient.MixProject do
   defp deps do
     [
       {:ecto, "~> 2.2"},
+      {:absinthe_websocket, "~> 0.1", git: "git@github.com:annkissam/absinthe_websocket.git"},
     ]
   end
 
