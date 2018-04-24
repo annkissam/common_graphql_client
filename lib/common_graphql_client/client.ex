@@ -156,7 +156,7 @@ defmodule CommonGraphQLClient.Client do
       end
 
       defp handle(action, term), do: raise "No handler for (#{action}, #{term})"
-      defp handle(action, term, variables), do: raise "No hander for (#{action}, #{term}, #{variables})"
+      defp handle(action, term, variables), do: raise "No handler for (#{action}, #{term}, #{variables})"
 
       defp handle_subscribe_to(subscription_name, mod), do: raise "No subscription handler for (#{subscription_name}, #{mod})"
 
