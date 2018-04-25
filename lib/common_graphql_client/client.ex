@@ -34,8 +34,11 @@ defmodule CommonGraphQLClient.Client do
 
       defp init(config) do
         if config[:load_from_system_env] do
-          api_token = System.get_env(unquote(env_var_token)) || raise system_env_err_msg(unquote(env_var_token))
-          api_url = System.get_env(unquote(env_var_url)) || raise system_env_err_msg(unquote(env_var_url))
+          env_var_token = unquote(env_var_token)
+          env_var_url = unquote(env_var_url)
+
+          api_token = System.get_env(env_var_token) || raise system_env_err_msg(env_var_token)
+          api_url = System.get_env(env_var_url) || raise system_env_err_msg(env_var_url)
 
           config = config
                    |> Keyword.put(:api_token, api_token)
