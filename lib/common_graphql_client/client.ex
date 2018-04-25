@@ -2,8 +2,8 @@ defmodule CommonGraphQLClient.Client do
   defmacro __using__(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     mod = Keyword.fetch!(opts, :mod)
-    env_var_token = Keyword.fetch!(opts, :env_var_token)
-    env_var_url = Keyword.fetch!(opts, :env_var_url)
+    api_token_func = Keyword.get(opts, :api_token_func)
+    api_url_func = Keyword.get(opts, :api_url_func)
 
     quote do
       @behaviour CommonGraphQLClient.ClientBehaviour
@@ -34,8 +34,8 @@ defmodule CommonGraphQLClient.Client do
 
       defp init(config) do
         if config[:load_from_system_env] do
-          api_token = System.get_env(unquote(env_var_token)) || raise system_env_err_msg(unquote(env_var_token))
-          api_url = System.get_env(unquote(env_var_url)) || raise system_env_err_msg(unquote(env_var_url))
+          api_token = config(:api_token) || unquote(api_token_func).()
+          api_url = config(:api_url) || unquote(api_url_func).()
 
           config = config
                    |> Keyword.put(:api_token, api_token)
@@ -45,10 +45,6 @@ defmodule CommonGraphQLClient.Client do
         else
           {:ok, config}
         end
-      end
-
-      defp system_env_err_msg(var) do
-        "expected the #{var} environment variable to be set"
       end
 
       def api_token do
