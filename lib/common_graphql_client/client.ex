@@ -122,6 +122,11 @@ defmodule CommonGraphQLClient.Client do
         handle_subscribe_to(subscription_name, mod)
       end
 
+      @impl CommonGraphQLClient.ClientBehaviour
+      def absorb(subscription_name, data) do
+        handle_absorb(subscription_name, data)
+      end
+
       def supervisor() do
         @caller.supervisor(__MODULE__)
       end
@@ -156,6 +161,11 @@ defmodule CommonGraphQLClient.Client do
 
       defp handle_subscribe_to(subscription_name, mod), do: raise "No subscription handler for (#{subscription_name}, #{mod})"
 
+      defp handle_absorb(subscription_name, data) do
+        raise "No absorption handler for (#{subscription_name}, with data #{inspect data})"
+      end
+
+      def resolve_response({:ok, data}, key, nil), do: {:ok, Map.get(data, key)}
       def resolve_response({:ok, data}, key, schema) do
         data = data
                |> Map.get(key)
