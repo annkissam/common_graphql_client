@@ -5,7 +5,7 @@ defmodule CommonGraphQLClient.Client do
     api_token_func = Keyword.get(opts, :api_token_func)
     api_url_func = Keyword.get(opts, :api_url_func)
 
-    quote do
+    quote location: :keep do
       @behaviour CommonGraphQLClient.ClientBehaviour
 
       @config fn ->
