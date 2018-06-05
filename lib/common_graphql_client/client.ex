@@ -122,11 +122,6 @@ defmodule CommonGraphQLClient.Client do
         handle_subscribe_to(subscription_name, mod)
       end
 
-      @impl CommonGraphQLClient.ClientBehaviour
-      def absorb(subscription_name, data) do
-        handle_absorb(subscription_name, data)
-      end
-
       def supervisor() do
         @caller.supervisor(__MODULE__)
       end
