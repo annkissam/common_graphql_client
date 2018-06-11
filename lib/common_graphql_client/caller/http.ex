@@ -2,8 +2,8 @@ defmodule CommonGraphQLClient.Caller.Http do
   @behaviour CommonGraphQLClient.CallerBehaviour
 
   @impl CommonGraphQLClient.CallerBehaviour
-  def post(_client, _query, _variables \\ []) do
-    {:error, "Not Implemented"}
+  def post(client, query, variables \\ []) do
+    HTTPoison.post(client.api_url, query, [{"Content-Type", "application/json"}, {"authorization", "Bearer #{client.api_token}"}])
   end
 
   @impl CommonGraphQLClient.CallerBehaviour
