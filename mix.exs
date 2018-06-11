@@ -22,8 +22,9 @@ defmodule CommonGraphqlClient.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, "~> 2.2"},
       {:absinthe_websocket, "~> 0.1", git: "git@github.com:annkissam/absinthe_websocket.git"},
+      {:ecto, "~> 2.2"},
+      {:httpoison, "~> 1.1"},
     ]
   end
 
