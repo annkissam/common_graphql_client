@@ -6,23 +6,31 @@ defmodule CommonGraphQLClient.Context do
     otp_app = Keyword.fetch!(opts, :otp_app)
 
     quote location: :keep do
-      @config fn ->
-        unquote(otp_app) |> Application.get_env(__MODULE__, [])
+      def config do
+        unquote(otp_app)
+        |> Application.get_env(__MODULE__, [])
       end
-      @config_with_key fn key -> @config.() |> Keyword.get(key) end
-      @client @config_with_key.(:client)
 
-      defdelegate list(term), to: @client
-      defdelegate list!(term), to: @client
+      def config(key, default \\ nil) do
+        config()
+        |> Keyword.get(key, default)
+      end
 
-      defdelegate list_by(term, variables), to: @client
-      defdelegate list_by!(term, variables), to: @client
+      def client do
+        config(:client)
+      end
 
-      defdelegate get(term, id), to: @client
-      defdelegate get!(term, id), to: @client
+      def list(term), do: client().list(term)
+      def list!(term), do: client().list!(term)
 
-      defdelegate get_by(term, variables), to: @client
-      defdelegate get_by!(term, variables), to: @client
+      def list_by(term, variables), do: client().list_by(term, variables)
+      def list_by!(term, variables), do: client().list_by!(term, variables)
+
+      def get(term, id), do: client().get(term, id)
+      def get!(term, id), do: client().get!(term, id)
+
+      def get_by(term, variables), do: client().get_by(term, variables)
+      def get_by!(term, variables), do: client().get_by!(term, variables)
 
       # @behaviour AbsintheWebSocket.Subscriber
 
