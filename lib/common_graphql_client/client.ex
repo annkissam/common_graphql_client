@@ -5,8 +5,10 @@ defmodule CommonGraphQLClient.Client do
   defmacro __using__(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     mod = Keyword.fetch!(opts, :mod)
-    api_token_func = Keyword.get(opts, :api_token_func, quote(do: fn -> raise "api_token not configured" end))
-    api_url_func = Keyword.get(opts, :api_url_func, quote(do: fn -> raise "api_url not configured" end))
+    http_api_token_func = Keyword.get(opts, :http_api_token_func, quote(do: fn -> nil end))
+    http_api_url_func = Keyword.get(opts, :http_api_url_func, quote(do: fn -> nil end))
+    websocket_api_token_func = Keyword.get(opts, :websocket_api_token_func, quote(do: fn -> nil end))
+    websocket_api_url_func = Keyword.get(opts, :websocket_api_url_func, quote(do: fn -> nil end))
 
     quote location: :keep do
       @behaviour CommonGraphQLClient.ClientBehaviour
@@ -44,12 +46,16 @@ defmodule CommonGraphQLClient.Client do
 
       defp init(config) do
         if config[:load_from_system_env] do
-          api_token = config(:api_token) || unquote(api_token_func).()
-          api_url = config(:api_url) || unquote(api_url_func).()
+          http_api_token = config(:http_api_token) || unquote(http_api_token_func).()
+          http_api_url = config(:http_api_url) || unquote(http_api_url_func).()
+          websocket_api_token = config(:websocket_api_token) || unquote(websocket_api_token_func).()
+          websocket_api_url = config(:websocket_api_url) || unquote(websocket_api_url_func).()
 
           config = config
-                   |> Keyword.put(:api_token, api_token)
-                   |> Keyword.put(:api_url, api_url)
+                   |> Keyword.put(:http_api_token, http_api_token)
+                   |> Keyword.put(:http_api_url, http_api_url)
+                   |> Keyword.put(:websocket_api_token, websocket_api_token)
+                   |> Keyword.put(:websocket_api_url, websocket_api_url)
 
           {:ok, config}
         else
@@ -57,12 +63,20 @@ defmodule CommonGraphQLClient.Client do
         end
       end
 
-      def api_token do
-        config(:api_token)
+      def http_api_token do
+        config(:http_api_token)
       end
 
-      def api_url do
-        config(:api_url)
+      def http_api_url do
+        config(:http_api_url)
+      end
+
+      def websocket_api_token do
+        config(:websocket_api_token)
+      end
+
+      def websocket_api_url do
+        config(:websocket_api_url)
       end
 
       def mod do

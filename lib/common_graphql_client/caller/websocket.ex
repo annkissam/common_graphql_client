@@ -1,5 +1,5 @@
 if Code.ensure_loaded?(AbsintheWebSocket) do
-  defmodule CommonGraphQLClient.Caller.Websocket do
+  defmodule CommonGraphQLClient.Caller.WebSocket do
     @behaviour CommonGraphQLClient.CallerBehaviour
 
     @impl CommonGraphQLClient.CallerBehaviour
@@ -20,7 +20,7 @@ if Code.ensure_loaded?(AbsintheWebSocket) do
     def supervisor(client) do
       base_name = Module.concat([client.mod(), Caller])
 
-      {AbsintheWebSocket.Supervisor, [subscriber: client.mod(), url: client.api_url(), token: client.api_token(), base_name: base_name]}
+      {AbsintheWebSocket.Supervisor, [subscriber: client.mod(), url: client.websocket_api_url(), token: client.websocket_api_token(), base_name: base_name]}
     end
   end
 end

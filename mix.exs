@@ -4,7 +4,7 @@ defmodule CommonGraphqlClient.MixProject do
   def project do
     [
       app: :common_graphql_client,
-      version: "0.2.1",
+      version: "0.3.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -22,14 +22,14 @@ defmodule CommonGraphqlClient.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:absinthe_websocket, "~> 0.1", optional: true},
+      {:absinthe_websocket, "~> 0.2", optional: true},
       {:ecto, "~> 2.2"},
       {:httpoison, "~> 1.1", optional: true},
     ]
   end
 
   defp aliases do
-    ["publish": [&git_tag/1]]
+    ["publish": ["hex.publish", &git_tag/1]]
   end
 
   defp git_tag(_args) do
