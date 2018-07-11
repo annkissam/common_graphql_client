@@ -1,4 +1,7 @@
 defmodule CommonGraphQLClient.Client do
+  @moduledoc """
+  """
+
   defmacro __using__(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     mod = Keyword.fetch!(opts, :mod)
@@ -12,7 +15,14 @@ defmodule CommonGraphQLClient.Client do
         unquote(otp_app) |> Application.get_env(unquote(mod), [])
       end
       @config_with_key fn key -> @config.() |> Keyword.get(key) end
-      @caller @config_with_key.(:caller) || CommonGraphQLClient.Caller.Websocket
+
+      defp query_caller do
+        config(:query_caller) || CommonGraphQLClient.Caller.Nil
+      end
+
+      defp subscription_caller do
+        config(:subscription_caller) || CommonGraphQLClient.Caller.Nil
+      end
 
       def config do
         unquote(otp_app)
@@ -123,11 +133,11 @@ defmodule CommonGraphQLClient.Client do
       end
 
       def supervisor() do
-        @caller.supervisor(__MODULE__)
+        subscription_caller().supervisor(__MODULE__)
       end
 
       def post(query, variables \\ %{}) do
-        @caller.post(__MODULE__, query, variables)
+        query_caller().post(__MODULE__, query, variables)
       end
 
       defp do_post(term, schema, query, variables \\ %{}) do
@@ -137,7 +147,7 @@ defmodule CommonGraphQLClient.Client do
       end
 
       def subscribe(term, callback, query, variables \\ %{}) do
-        @caller.subscribe(__MODULE__, term, callback, query, variables)
+        subscription_caller().subscribe(__MODULE__, term, callback, query, variables)
       end
 
       defp do_subscribe(mod, term, schema, query, variables \\ %{}) do
