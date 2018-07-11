@@ -2,8 +2,8 @@ defmodule CommonGraphQLClient.Client do
   defmacro __using__(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     mod = Keyword.fetch!(opts, :mod)
-    api_token_func = Keyword.get(opts, :api_token_func)
-    api_url_func = Keyword.get(opts, :api_url_func)
+    api_token_func = Keyword.get(opts, :api_token_func, quote(do: fn -> raise "api_token not configured" end))
+    api_url_func = Keyword.get(opts, :api_url_func, quote(do: fn -> raise "api_url not configured" end))
 
     quote location: :keep do
       @behaviour CommonGraphQLClient.ClientBehaviour
