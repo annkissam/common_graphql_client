@@ -1,14 +1,26 @@
 defmodule CommonGraphqlClient.MixProject do
   use Mix.Project
 
+  @version "0.3.0"
+  @url "https://github.com/annkissam/common_graphql_client"
+  @maintainers [
+    "Josh Adams",
+    "Eric Sullivan",
+  ]
+
   def project do
     [
       app: :common_graphql_client,
-      version: "0.3.0",
+      version: @version,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
+      description: "Elixir GraphQL Client with HTTP and WebSocket Support",
+      docs: docs(),
+      package: package(),
+      source_url: @url,
+      homepage_url: @url,
     ]
   end
 
@@ -25,6 +37,24 @@ defmodule CommonGraphqlClient.MixProject do
       {:absinthe_websocket, "~> 0.2", optional: true},
       {:ecto, "~> 2.2"},
       {:httpoison, "~> 1.1", optional: true},
+      {:ex_doc, "~> 0.10", only: :dev},
+    ]
+  end
+
+  def docs do
+    [
+      extras: ["README.md", "CHANGELOG.md"],
+      source_ref: "v#{@version}"
+    ]
+  end
+
+  defp package do
+    [
+      name: :common_graphql_client,
+      maintainers: @maintainers,
+      licenses: ["MIT"],
+      links: %{github: @url},
+      files: ["lib", "mix.exs", "README*", "LICENSE*", "CHANGELOG.md"],
     ]
   end
 
