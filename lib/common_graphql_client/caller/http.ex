@@ -9,7 +9,7 @@ if Code.ensure_loaded?(HTTPoison) do
         variables: variables
       } |> Poison.encode!
 
-      case HTTPoison.post(client.api_url, body, [{"Content-Type", "application/json"}, {"authorization", "Bearer #{client.api_token}"}]) do
+      case HTTPoison.post(client.http_api_url(), body, [{"Content-Type", "application/json"}, {"authorization", "Bearer #{client.http_api_token()}"}]) do
         {:ok, %{body: json_body}} ->
           body = Poison.decode!(json_body)
           {:ok, body["data"]}
@@ -20,7 +20,7 @@ if Code.ensure_loaded?(HTTPoison) do
 
     @impl CommonGraphQLClient.CallerBehaviour
     def subscribe(_client, _subscription_name, _callback, _query, _variables \\ []) do
-      nil
+      raise "Not Implemented"
     end
 
     @impl CommonGraphQLClient.CallerBehaviour

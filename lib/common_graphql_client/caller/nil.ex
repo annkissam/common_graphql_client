@@ -8,7 +8,7 @@ defmodule CommonGraphQLClient.Caller.Nil do
 
   @impl CommonGraphQLClient.CallerBehaviour
   def subscribe(_client, _subscription_name, _callback, _query, _variables \\ []) do
-    nil
+    raise "Not Implemented"
   end
 
   @impl CommonGraphQLClient.CallerBehaviour
