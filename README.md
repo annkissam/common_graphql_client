@@ -1,6 +1,6 @@
 # CommonGraphqlClient
 
-**TODO: Add description**
+CommonGraphQLClient is a library for working with GraphQL results in Elixir.
 
 ## Installation
 
