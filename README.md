@@ -6,7 +6,7 @@ An Elixir libary for generating GraphQL clients. Adapters are provided for both 
 
 Docs can be found at [https://hexdocs.pm/common_graphql_client](https://hexdocs.pm/common_graphql_client).
 
-A complete walkthrough can be found on the Annkissam Alembic. It also has an associated [demo](https://github.com/annkissam/absinthe_websocket_demo).
+A complete walkthrough can be found on the [Annkissam Alembic](https://www.annkissam.com/elixir/alembic/posts/2018/07/13/graphql-subscriptions-connecting-phoenix-applications-with-absinthe-and-websockets.html). It also has an associated [demo](https://github.com/annkissam/absinthe_websocket_demo).
 
 ## Installation
 
