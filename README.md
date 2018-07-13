@@ -4,13 +4,13 @@ An Elixir libary for generating GraphQL clients. Adapters are provided for both 
 
 ## Documentation
 
-Docs can be found at [https://hexdocs.pm/common_graphql_client](https://hexdocs.pm/common_graphql_client)
+Docs can be found at [https://hexdocs.pm/common_graphql_client](https://hexdocs.pm/common_graphql_client).
 
-A complete walkthrough can be found on the Annkissam Alembic.
+A complete walkthrough can be found on the Annkissam Alembic. It also has an associated [demo](https://github.com/annkissam/absinthe_websocket_demo).
 
 ## Installation
 
-Adding `common_graphql_client` to your list of dependencies in `mix.exs`:
+Add `common_graphql_client` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -22,7 +22,7 @@ def deps do
 end
 ```
 
-An example mix config:
+An example Mix config:
 
 ```elixir
 config :my_app, MyAppApi.Context,
@@ -45,7 +45,9 @@ config :my_app, MyAppApi.Context,
 
 ## Context
 
-The main entry point to the client will be the context. You can add additional methods, but it knows about `[:list, :list_by, :get, :get_by]` and their `!` methods. It is also responsible for implementing a `subscibe/0` method (if using subscriptions). That method is called when the initial connection is made (to initiate any subscriptions) and on re-connection (to re-establish the subscriptions). It can also perform any initiation that needs to happen when the connection is established (for instance, syncing missing data).
+The main entry point to the client will be the context. You can add additional methods, but it knows about `[:list, :list_by, :get, :get_by]` and their corresponding `!` methods.
+
+The context is also responsible for implementing a `subscibe/0` method (if using subscriptions). That method is called when the initial connection is made (to initiate any subscriptions) and on re-connection (to re-establish the subscriptions). It can also perform any initiation that needs to happen when the connection is established (for instance, syncing missing data). After the subscription is made, each notification will call the `receive\2` method.
 
 ```elixir
 defmodule MyAppApi.Context do
@@ -75,9 +77,27 @@ defmodule MyAppApi.Context do
 end
 ```
 
+Your use case might necessitate the `receive\2` method exist on another module. The second parameter of `subscribe_to` allows a module to be specified. The code changes would look like this:
+
+```elixir
+defmodule MyAppApi.Context do
+  ...
+
+  def subscribe do
+    client().subscribe_to(:employee_created, EmployeeNotificationHandler)
+  end
+end
+
+defmodule EmployeeNotificationHandler do
+  def receive(:employee_created, employee) do
+    ...
+  end
+end
+```
+
 ## Client
 
-You application will need a client. It will be responsible for turning symbols into various GraphQL Queries and Subscriptions. It'll also map the returned results into Ecto schemas. By calling `use CommonGraphQLClient.Client`, several methods will be made available. The client is resposible for implementing a `handle` method for each call the context makes:
+Your application will need a client. It will be responsible for turning symbols into various GraphQL Queries and Subscriptions. It'll also map the returned results into Ecto schemas. By calling `use CommonGraphQLClient.Client`, several methods will be made available. The client is responsible for implementing `handle\2`, `handle\3`, and `handle_subscribe_to\2` methods for each call the context makes:
 
 ```elixir
 defmodule MyAppApi.Client do
@@ -143,7 +163,7 @@ defmodule MyAppApi.Schema.Employee do
 end
 ```
 
-By adjusting the changeset you can also map GraphQL associations into additional structs. For example, using (cast_embed/3)[https://hexdocs.pm/ecto/Ecto.Changeset.html#cast_embed/3]:
+By adjusting the changeset you can also map GraphQL associations into additional structs. For example, using [cast_embed/3](https://hexdocs.pm/ecto/Ecto.Changeset.html#cast_embed/3):
 
 ```elixir
 defmodule MyAppApi.Schema.Employee do
@@ -241,12 +261,12 @@ end
 
 ### Client
 
-The HTTP Client can send `Bearer` tokens, whereas the WebSocket can send a token as a query param. Since these credentials should not be in source control, this library provides a way to set them at runtime. First, update the mix config:
+The HTTP Client can send `Bearer` tokens, whereas the WebSocket can send a token as a query param. Since these credentials should not be in source control, this library provides a way to set them at runtime. First, update the Mix config:
 
 ```elixir
 config :my_app, MyAppApi.Context,
   ...
-  load_from_system_env: true # Add This
+  load_from_system_env: true # add this
 ```
 
 Second, update your client:
@@ -276,9 +296,11 @@ defmodule MyApp.Supervisor do
 end
 ```
 
-`http_api_token\0` and `websocket_api_token\0` can also be overriden in the client to support other use cases.
+Alternatively, `http_api_token\0` and `websocket_api_token\0` can be overridden in the client to support other use cases.
 
 ### HTTP Server
+
+While this package supports creating clients, if you're also building the GraphQL API in Phoenix we can make some (simple) suggestions. These examples will use a shared token. They'll also use [secure_compare](https://github.com/plackemacher/secure_compare) to mitigate [timing attacks](http://sudo.icalialabs.com/a-short-story-on-timming-attack/). Your API will require more complexity if it needs to support multiple users or to differentiate between clients.
 
 A plug added to the router can secure your GraphQL API endpoint:
 
@@ -289,11 +311,8 @@ pipeline :api do
 end
 ```
 
-NOTE: This example plug assumes a simple shared token. You may want to use JWTs or some other token mechanism to differentiate clients.
-
 ```elixir
-# For more information, see:
-# https://ryanswapp.com/2016/12/06/phoenix-graphql-tutorial-with-absinthe-authentication-with-guardian/
+# This is based on the Absinthe authentication documentation:
 # https://hexdocs.pm/absinthe/context-and-authentication.html
 defmodule Api.Authentication do
   @behaviour Plug
@@ -326,7 +345,7 @@ defmodule Api.Authentication do
   def authorize_token(""), do: :error
 
   def authorize_token(token) do
-    case token == secret_token() do
+    case SecureCompare.compare(token, secret_token()) do
       true -> :ok
       _ -> :error
     end
@@ -348,7 +367,7 @@ defmodule MyAppWeb.UserSocket do
   ...
 
   def connect(%{"token" => token} = params, socket) do
-    case token == Api.Authentication.secret_token() do
+    case SecureCompare.compare(token, Api.Authentication.secret_token()) do
       true ->
         {:ok, socket}
       _ ->
@@ -356,5 +375,4 @@ defmodule MyAppWeb.UserSocket do
     end
   end
 end
-
 ```
