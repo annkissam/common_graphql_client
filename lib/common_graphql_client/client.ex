@@ -204,7 +204,11 @@ defmodule CommonGraphQLClient.Client do
         |> Ecto.Changeset.apply_changes()
       end
 
-      defoverridable [handle: 2, handle: 3, handle_subscribe_to: 2]
+      defoverridable [handle: 2,
+                      handle: 3,
+                      handle_subscribe_to: 2,
+                      http_api_token: 0,
+                      websocket_api_token: 0]
     end
   end
 
