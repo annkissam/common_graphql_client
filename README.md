@@ -1,6 +1,6 @@
 # CommonGraphqlClient
 
-An Elixir libary for generating GraphQL clients. Adapters are provided for both HTTP (using [HTTPoison](https://github.com/edgurgel/httpoison)) and WebSockets (using [AbsintheWebSocket](https://github.com/annkissam/absinthe_websocket)). Both adapters support GraphQL queries, whereas Websockets are required for subscriptions.
+An Elixir libary for generating GraphQL clients. Adapters are provided for both HTTP (using [HTTPoison](https://github.com/edgurgel/httpoison)) and WebSockets (using [AbsintheWebSocket](https://github.com/annkissam/absinthe_websocket)). Both adapters support GraphQL queries, whereas WebSockets are required for subscriptions.
 
 ## Documentation
 
