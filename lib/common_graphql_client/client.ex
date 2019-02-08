@@ -11,6 +11,8 @@ defmodule CommonGraphQLClient.Client do
     websocket_api_url_func = Keyword.get(opts, :websocket_api_url_func, quote(do: fn -> nil end))
 
     quote location: :keep do
+      require Logger
+
       @behaviour CommonGraphQLClient.ClientBehaviour
 
       @config fn ->
@@ -150,13 +152,13 @@ defmodule CommonGraphQLClient.Client do
         subscription_caller().supervisor(__MODULE__)
       end
 
-      def post(query, variables \\ %{}) do
-        query_caller().post(__MODULE__, query, variables)
+      def post(query, variables \\ %{}, opts \\ []) do
+        query_caller().post(__MODULE__, query, variables, opts)
       end
 
-      defp do_post(term, schema, query, variables \\ %{}) do
+      defp do_post(term, schema, query, variables \\ %{}, opts \\ []) do
         query
-        |> post(variables)
+        |> post(variables, opts)
         |> resolve_response(Atom.to_string(term), schema)
       end
 
@@ -184,14 +186,20 @@ defmodule CommonGraphQLClient.Client do
         raise "No absorption handler for (#{subscription_name}, with data #{inspect data})"
       end
 
-      def resolve_response({:ok, data}, key, nil), do: {:ok, Map.get(data, key)}
-      def resolve_response({:ok, data}, key, schema) do
+      def resolve_response({:ok, data, errors}, key, nil) do
+        log_errors(errors)
+        {:ok, Map.get(data, key)}
+      end
+
+      def resolve_response({:ok, data, errors}, key, schema) do
+        log_errors(errors)
         data = data
                |> Map.get(key)
                |> to_schema(schema)
 
         {:ok, data}
       end
+
       def resolve_response({:error, errors}, _, _), do: {:error, errors}
 
       defp to_schema(nil, _), do: nil
@@ -203,6 +211,10 @@ defmodule CommonGraphQLClient.Client do
         |> apply(:changeset, [struct(schema), resource_params])
         |> Ecto.Changeset.apply_changes()
       end
+
+      defp log_errors(nil), do: :ok
+      defp log_errors(errors),
+        do: Logger.warn("Errors in reply: #{inspect errors}")
 
       defoverridable [handle: 2,
                       handle: 3,

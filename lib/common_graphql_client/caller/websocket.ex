@@ -3,10 +3,10 @@ if Code.ensure_loaded?(AbsintheWebSocket) do
     @behaviour CommonGraphQLClient.CallerBehaviour
 
     @impl CommonGraphQLClient.CallerBehaviour
-    def post(client, query, variables \\ []) do
+    def post(client, query, variables \\ [], opts \\ []) do
       query_server_name = Module.concat([client.mod(), Caller, QueryServer])
 
-      AbsintheWebSocket.QueryServer.post(query_server_name, query, variables)
+      AbsintheWebSocket.QueryServer.post(query_server_name, query, variables, opts)
     end
 
     @impl CommonGraphQLClient.CallerBehaviour
