@@ -59,7 +59,7 @@ defmodule CommonGraphqlClient.MixProject do
   end
 
   defp aliases do
-    ["publish": ["hex.publish", &git_tag/1]]
+    [publish: ["hex.publish", &git_tag/1]]
   end
 
   defp git_tag(_args) do

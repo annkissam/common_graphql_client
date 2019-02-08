@@ -12,7 +12,7 @@ if Code.ensure_loaded?(HTTPoison) do
       case HTTPoison.post(client.http_api_url(), body, [{"Content-Type", "application/json"}, {"authorization", "Bearer #{client.http_api_token()}"}]) do
         {:ok, %{body: json_body}} ->
           body = Poison.decode!(json_body)
-          {:ok, body["data"]}
+          {:ok, body["data"], body["errors"]}
         {:error, error} ->
           {:error, error}
       end
