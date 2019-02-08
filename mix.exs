@@ -1,7 +1,7 @@
 defmodule CommonGraphqlClient.MixProject do
   use Mix.Project
 
-  @version "0.3.0"
+  @version "0.3.1"
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
@@ -34,7 +34,7 @@ defmodule CommonGraphqlClient.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:absinthe_websocket, "~> 0.2", optional: true},
+      {:absinthe_websocket, "~> 0.2.2", optional: true},
       {:ecto, "~> 2.2"},
       {:httpoison, "~> 1.1", optional: true},
       {:ex_doc, "~> 0.10", only: :dev},
