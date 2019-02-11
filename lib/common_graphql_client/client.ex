@@ -148,8 +148,8 @@ defmodule CommonGraphQLClient.Client do
         handle_subscribe_to(subscription_name, mod)
       end
 
-      def supervisor() do
-        subscription_caller().supervisor(__MODULE__)
+      def supervisor(opts \\ []) do
+        subscription_caller().supervisor(__MODULE__, opts)
       end
 
       def post(query, variables \\ %{}, opts \\ []) do
