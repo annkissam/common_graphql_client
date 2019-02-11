@@ -5,6 +5,6 @@ defmodule CommonGraphQLClient.CallerBehaviour do
 
   @callback post(client :: any, query :: String.t(), variables :: keyword()) :: any
   @callback subscribe(client :: any, subscription_name :: atom(), callback :: fun(), query :: String.t(), variables :: keyword()) :: any
-  @callback supervisor(client :: any) :: {atom(), any} | no_return()
+  @callback supervisor(client :: any, opts :: Keyword.t()) :: {atom(), any} | no_return()
 end
 

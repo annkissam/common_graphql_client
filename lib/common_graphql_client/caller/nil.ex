@@ -12,5 +12,5 @@ defmodule CommonGraphQLClient.Caller.Nil do
   end
 
   @impl CommonGraphQLClient.CallerBehaviour
-  def supervisor(_client), do: nil
+  def supervisor(_client, _opts), do: nil
 end

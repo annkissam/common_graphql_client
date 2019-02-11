@@ -17,10 +17,16 @@ if Code.ensure_loaded?(AbsintheWebSocket) do
     end
 
     @impl CommonGraphQLClient.CallerBehaviour
-    def supervisor(client) do
+    def supervisor(client, opts) do
       base_name = Module.concat([client.mod(), Caller])
 
-      {AbsintheWebSocket.Supervisor, [subscriber: client.mod(), url: client.websocket_api_url(), token: client.websocket_api_token(), base_name: base_name]}
+      {AbsintheWebSocket.Supervisor, [
+        subscriber: client.mod(),
+        url: client.websocket_api_url(),
+        token: client.websocket_api_token(),
+        base_name: base_name,
+        async: Keyword.get(opts, :async, true)
+      ]}
     end
   end
 end
