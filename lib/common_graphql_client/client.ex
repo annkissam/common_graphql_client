@@ -168,7 +168,7 @@ defmodule CommonGraphQLClient.Client do
 
       defp do_subscribe(mod, term, schema, query, variables \\ %{}) do
         callback = fn(result) ->
-          {:ok, resource} = {:ok, result}
+          {:ok, resource} = {:ok, result, nil}
                             |> resolve_response(Atom.to_string(term), schema)
 
           apply(mod, :receive, [term, resource])
