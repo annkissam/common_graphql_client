@@ -3,7 +3,7 @@ if Code.ensure_loaded?(HTTPoison) do
     @behaviour CommonGraphQLClient.CallerBehaviour
 
     @impl CommonGraphQLClient.CallerBehaviour
-    def post(client, query, variables \\ []) do
+    def post(client, query, variables \\ [], _opts \\ []) do
       body = %{
         query: query,
         variables: variables

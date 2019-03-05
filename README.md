@@ -274,7 +274,7 @@ Second, update your client:
 ```elixir
 use CommonGraphQLClient.Client,
   ...
-  api_token_func: fn -> System.get_env("YOUR_API_TOKEN") || raise "ENV Not Set: YOUR_API_TOKEN ENV" end
+  http_api_token_func: fn -> System.get_env("YOUR_API_TOKEN") || raise "ENV Not Set: YOUR_API_TOKEN ENV" end
   websocket_api_token_func: fn -> System.get_env("YOUR_API_TOKEN") || raise "ENV Not Set: YOUR_API_TOKEN ENV" end
 ```
 

@@ -2,7 +2,7 @@ defmodule CommonGraphQLClient.Caller.Nil do
   @behaviour CommonGraphQLClient.CallerBehaviour
 
   @impl CommonGraphQLClient.CallerBehaviour
-  def post(_client, _query, _variables \\ []) do
+  def post(_client, _query, _variables \\ [], _opts \\ []) do
     {:error, "Not Implemented"}
   end
 
