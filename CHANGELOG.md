@@ -1,5 +1,9 @@
 # Changelog
 
+## v.0.3.3
+- [PR 13](`CommonGraphQLClient.Caller.Http.post\4`) Better HTTPoison error handling in `CommonGraphQLClient.Caller.Http.post\4`
+- Allow http_opts to be sent to `CommonGraphQLClient.Caller.Http.post\4`
+
 ## v.0.3.2
 - Fix UndefinedFunctionError error on Caller.Http.post & Caller.Nil.post
 
