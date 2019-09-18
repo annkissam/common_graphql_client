@@ -35,7 +35,8 @@ defmodule CommonGraphqlClient.MixProject do
   defp deps do
     [
       {:absinthe_websocket, "~> 0.2.2", optional: true},
-      {:ecto_sql, "~> 2.2 or ~> 3.0"},
+      {:ecto, "~> 2.2 or ~> 3.0", optional: true},
+      {:ecto_sql, "~> 3.0", optional: true},
       {:httpoison, "~> 1.1", optional: true},
       {:ex_doc, "~> 0.10", only: :dev},
     ]
