@@ -41,6 +41,13 @@ defmodule CommonGraphqlClient.StaticValidator do
     iex> {:error, error} = CommonGraphqlClient.StaticValidator.validate(query_string, validation_strategy, schema_string: schema_string)
     iex> Regex.match?(~r/Unexpected Name \\"bad\\"/, error)
     true
+
+    # When validation_strategy is native
+    iex> schema_string = "\\ntype Author {\\n firstName: String\\n  lastName: String\\n  }\\n  type Query {\\n author(id: Int!): Author\\n  }\\n"
+    iex> query_string = "{ __typename }"
+    iex> validation_strategy = :native
+    iex> CommonGraphqlClient.StaticValidator.validate(query_string, validation_strategy, schema_string: schema_string)
+    ** (RuntimeError) Not implemented
   """
   @spec validate(String.t(), atom(), Keyword.t()) :: :ok | {:error, term()}
   def validate(query_string, mod, opts)
@@ -67,6 +74,10 @@ defmodule CommonGraphqlClient.StaticValidator do
         File.rm(temp_file_path())
         {:error, error}
     end
+  end
+
+  def validate(_query_string, :native, _opts) do
+    raise "Not implemented"
   end
 
   defp check_node do
