@@ -198,10 +198,6 @@ defmodule CommonGraphQLClient.Client do
       defp handle_subscribe_to(subscription_name, mod),
         do: raise("No subscription handler for (#{subscription_name}, #{mod})")
 
-      defp handle_absorb(subscription_name, data) do
-        raise "No absorption handler for (#{subscription_name}, with data #{inspect(data)})"
-      end
-
       def resolve_response({:ok, data, errors}, key, nil) do
         log_errors(errors)
         {:ok, Map.get(data, key)}
