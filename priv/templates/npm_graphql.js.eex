@@ -1,0 +1,19 @@
+import { makeExecutableSchema, addMocksToSchema } from 'graphql-tools';
+import { graphql } from 'graphql';
+
+// Fill this in with the schema string
+const schemaString = `<%=
+  schema_string
+%>`;
+
+// Make a GraphQL schema with no resolvers
+const schema = makeExecutableSchema({ typeDefs: schemaString });
+
+// Add mocks, modifies schema in place
+addMocksToSchema({ schema });
+
+const query = `<%=
+  query_string
+%>`;
+
+graphql(schema, query).then((result) => console.log('Got result', result));
