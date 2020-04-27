@@ -1,0 +1,10 @@
+{
+  "name": "schema-validator",
+  "version": "1.0.0",
+  "description": "Validate GraphQL schema from CLI",
+  "author": "",
+  "devDependencies": {
+    "graphql": "^15.0.0",
+    "graphql-tools": "^5.0.0"
+  }
+}
