@@ -56,6 +56,7 @@ defmodule CommonGraphqlClient.StaticValidator do
     case File.read(schema_path) do
       {:ok, contents} ->
         validate(query_string, validation_strategy, schema_string: contents)
+
       {:error, error} ->
         {:error, error}
     end
@@ -64,8 +65,7 @@ defmodule CommonGraphqlClient.StaticValidator do
   def validate(query_string, :npm_graphql, schema_string: schema_string) do
     with :ok <- check_node(),
          :ok <- generate_js_file(query_string, schema_string),
-         :ok <- node_run_file(temp_file_path())
-    do
+         :ok <- node_run_file(temp_file_path()) do
       # remove temp file after validation
       File.rm(temp_file_path())
     else

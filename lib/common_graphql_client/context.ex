@@ -38,7 +38,7 @@ defmodule CommonGraphQLClient.Context do
       def subscribe do
       end
 
-      defoverridable [subscribe: 0]
+      defoverridable subscribe: 0
     end
   end
 end
