@@ -5,7 +5,8 @@ defmodule CommonGraphqlClient.MixProject do
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
-    "Eric Sullivan"
+    "Eric Sullivan",
+    "Adi Iyengar"
   ]
 
   def project do
