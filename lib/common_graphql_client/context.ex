@@ -11,13 +11,13 @@ defmodule CommonGraphQLClient.Context do
         |> Application.get_env(__MODULE__, [])
       end
 
-      def config(key, default \\ nil) do
+      def config(key, default \\ fn -> nil end) do
         config()
-        |> Keyword.get(key, default)
+        |> Keyword.get_lazy(key, default)
       end
 
       def client do
-        config(:client)
+        config(:client, fn -> raise "Client Not Configured" end)
       end
 
       def list(term), do: client().list(term)
@@ -38,7 +38,7 @@ defmodule CommonGraphQLClient.Context do
       def subscribe do
       end
 
-      defoverridable [subscribe: 0]
+      defoverridable subscribe: 0
     end
   end
 end

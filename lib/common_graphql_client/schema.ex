@@ -26,4 +26,3 @@ defmodule CommonGraphQLClient.Schema do
     end
   end
 end
-
