@@ -5,7 +5,7 @@ defmodule CommonGraphqlClient.MixProject do
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
-    "Eric Sullivan",
+    "Eric Sullivan"
   ]
 
   def project do
@@ -20,7 +20,7 @@ defmodule CommonGraphqlClient.MixProject do
       docs: docs(),
       package: package(),
       source_url: @url,
-      homepage_url: @url,
+      homepage_url: @url
     ]
   end
 
@@ -38,7 +38,7 @@ defmodule CommonGraphqlClient.MixProject do
       {:ecto, "~> 2.2 or ~> 3.0", optional: true},
       {:ecto_sql, "~> 3.0", optional: true},
       {:httpoison, "~> 1.1", optional: true},
-      {:ex_doc, "~> 0.10", only: :dev},
+      {:ex_doc, "~> 0.10", only: :dev}
     ]
   end
 
@@ -55,7 +55,7 @@ defmodule CommonGraphqlClient.MixProject do
       maintainers: @maintainers,
       licenses: ["MIT"],
       links: %{github: @url},
-      files: ["lib", "mix.exs", "README*", "LICENSE*", "CHANGELOG.md"],
+      files: ["lib", "mix.exs", "README*", "LICENSE*", "CHANGELOG.md"]
     ]
   end
 
@@ -64,7 +64,7 @@ defmodule CommonGraphqlClient.MixProject do
   end
 
   defp git_tag(_args) do
-    System.cmd "git", ["tag", "v" <> Mix.Project.config[:version]]
-    System.cmd "git", ["push", "--tags"]
+    System.cmd("git", ["tag", "v" <> Mix.Project.config()[:version]])
+    System.cmd("git", ["push", "--tags"])
   end
 end
