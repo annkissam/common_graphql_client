@@ -1,0 +1,111 @@
+version: 2.1
+
+defaults: &defaults
+  parallelism: 1
+  working_directory: ~/app
+  docker:
+    - image: circleci/elixir:1.6.6
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cgc-deps-cache-{{ checksum "mix.lock" }}
+            - cgc-deps-cache
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run: mix deps.get
+      - run: mix deps.compile
+      - run: mix compile
+      - save_cache:
+          key: cgc-deps-cache-{{ checksum "mix.lock" }}
+          paths:
+            - _build
+            - deps
+            - ~/.mix
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - app
+            - .mix
+
+  test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Run tests
+          command: mix test
+      - store_test_results:
+          path: _build/test/junit
+
+  credo:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Run credo
+          command: mix credo
+
+  check_formatted:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Verify formatted
+          command: mix format --check-formatted
+
+  dialyzer:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          keys:
+            - cgc-plt-cache-{{ checksum "mix.lock" }}
+            - cgc-plt-cache
+      - run: mix dialyzer --plt
+      - save_cache:
+          key: cgc-plt-cache-{{ checksum "mix.lock" }}
+          paths:
+            - _build
+            - ~/.mix
+      - run:
+          name: Run dialyzer
+          command: mix dialyzer
+
+  coverage:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Analyze coverage
+          command: mix coveralls
+
+workflows:
+  version: 2
+  continuous_integration:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - credo:
+          requires:
+            - build
+      - dialyzer:
+          requires:
+            - build
+      - coverage:
+          requires:
+            - build
+      - check_formatted:
+          requires:
+            - build
