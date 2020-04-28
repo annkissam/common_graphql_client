@@ -1,5 +1,7 @@
 if Code.ensure_loaded?(HTTPoison) do
   defmodule CommonGraphQLClient.Caller.Http do
+    @moduledoc false
+
     @behaviour CommonGraphQLClient.CallerBehaviour
 
     @impl CommonGraphQLClient.CallerBehaviour

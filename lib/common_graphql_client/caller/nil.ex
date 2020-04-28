@@ -1,4 +1,6 @@
 defmodule CommonGraphQLClient.Caller.Nil do
+  @moduledoc false
+
   @behaviour CommonGraphQLClient.CallerBehaviour
 
   @impl CommonGraphQLClient.CallerBehaviour
