@@ -43,14 +43,32 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
   """
   @impl true
   def validate(query_string, schema_string) do
-    case check_node() do
-      :ok -> node_run_validation(query_string, schema_string)
+    with :ok <- check_node(),
+         # there is a chance that this might be the case
+         :ok <- check_npm(),
+         :ok <- npm_install() do
+      node_run_validation(query_string, schema_string)
+    else
       {:error, error} -> {:error, error}
     end
   end
 
   defp check_node do
     case System.cmd("node", ["-h"]) do
+      {_output, 0} -> :ok
+      {error, 1} -> {:error, error}
+    end
+  end
+
+  defp check_npm do
+    case System.cmd("npm", ["help"]) do
+      {_output, 0} -> :ok
+      {error, 1} -> {:error, error}
+    end
+  end
+
+  defp npm_install do
+    case System.cmd("npm", ["install"], cd: node_path()) do
       {_output, 0} -> :ok
       {error, 1} -> {:error, error}
     end
