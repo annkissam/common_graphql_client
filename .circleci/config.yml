@@ -109,9 +109,9 @@ workflows:
       - credo:
           requires:
             - build
-      - dialyzer:
-          requires:
-            - build
+      # - dialyzer:
+      #     requires:
+      #       - build
       - coverage:
           requires:
             - build
