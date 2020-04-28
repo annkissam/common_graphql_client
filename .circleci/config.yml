@@ -38,6 +38,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: APT Installs (npm, node)
+          command: |
+            sudo apt install nodejs
+      - run:
           name: Run tests
           command: mix test
       - store_test_results:
@@ -61,30 +65,35 @@ jobs:
           name: Verify formatted
           command: mix format --check-formatted
 
-  dialyzer:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/
-      - restore_cache:
-          keys:
-            - cgc-plt-cache-{{ checksum "mix.lock" }}
-            - cgc-plt-cache
-      - run: mix dialyzer --plt
-      - save_cache:
-          key: cgc-plt-cache-{{ checksum "mix.lock" }}
-          paths:
-            - _build
-            - ~/.mix
-      - run:
-          name: Run dialyzer
-          command: mix dialyzer
+  # This project isn't ready for this yet.
+  # dialyzer:
+  #   <<: *defaults
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/
+  #     - restore_cache:
+  #         keys:
+  #           - cgc-plt-cache-{{ checksum "mix.lock" }}
+  #           - cgc-plt-cache
+  #     - run: mix dialyzer --plt
+  #     - save_cache:
+  #         key: cgc-plt-cache-{{ checksum "mix.lock" }}
+  #         paths:
+  #           - _build
+  #           - ~/.mix
+  #     - run:
+  #         name: Run dialyzer
+  #         command: mix dialyzer
 
   coverage:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/
+      - run:
+          name: APT Installs (npm, node)
+          command: |
+            sudo apt install nodejs
       - run:
           name: Analyze coverage
           command: mix coveralls
