@@ -3,7 +3,7 @@ var _graphqlTools = require("graphql-tools");
 var _graphql = require("graphql");
 
 // Fill this in with the schema string
-var schemaString = <%= inspect schema_string %>; // Make a GraphQL schema with no resolvers
+var schemaString = process.env.SCHEMA_STRING; // Make a GraphQL schema with no resolvers
 
 var schema = (0, _graphqlTools.makeExecutableSchema)({
   typeDefs: schemaString
@@ -15,7 +15,7 @@ var schema = (0, _graphqlTools.makeExecutableSchema)({
 });
 
 // Fill this in with the query_string string
-var query = <%= inspect query_string %>;
+var query = process.env.QUERY_STRING;
 
 (0, _graphql.graphql)(schema, query).then(function (result) {
   if(result['errors']) {

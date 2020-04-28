@@ -8,7 +8,7 @@ defmodule CommonGraphqlClient.StaticValidator do
   the query is valid or returns `{:error, reason}`.
 
   This method takes:
-  * a `query`: A graphql query string
+  * a `query_string`: A graphql query string
   * `validation_strategy`: Way to validate schema. Could be done in multiple
     ways:
     - `:npm_graphql` (needs `npm` cli) Uses npm calls to validate query
@@ -63,63 +63,10 @@ defmodule CommonGraphqlClient.StaticValidator do
   end
 
   def validate(query_string, :npm_graphql, schema_string: schema_string) do
-    with :ok <- check_node(),
-         :ok <- generate_js_file(query_string, schema_string),
-         :ok <- node_run_file(temp_file_path()) do
-      # remove temp file after validation
-      File.rm(temp_file_path())
-    else
-      {:error, error} ->
-        # remove temp file after validation
-        File.rm(temp_file_path())
-        {:error, error}
-    end
+    __MODULE__.NpmGraphql.validate(query_string, schema_string)
   end
 
   def validate(_query_string, :native, _opts) do
     raise "Not implemented"
-  end
-
-  defp check_node do
-    case System.cmd("node", ["-h"]) do
-      {_output, 0} -> :ok
-      {error, 1} -> {:error, error}
-    end
-  end
-
-  defp generate_js_file(query_string, schema_string) do
-    js_contents =
-      graphql_js_template_path()
-      |> EEx.eval_file(
-        query_string: query_string,
-        schema_string: schema_string
-      )
-
-    case File.write(temp_file_path(), js_contents) do
-      :ok -> :ok
-      {:error, error} -> {:error, error}
-    end
-  end
-
-  defp graphql_js_template_path do
-    priv = :code.priv_dir(:common_graphql_client)
-    Path.join([priv, "templates", "npm_graphql.js.eex"])
-  end
-
-  defp node_run_file(file_path) do
-    case System.cmd("node", [file_path], cd: node_path(), stderr_to_stdout: true) do
-      {_output, 0} -> :ok
-      {error, 1} -> {:error, error}
-    end
-  end
-
-  defp temp_file_path do
-    temp_file_name = "temp.js"
-    Path.join(node_path(), temp_file_name)
-  end
-
-  defp node_path do
-    priv = :code.priv_dir(:common_graphql_client)
-    Path.join([priv, "npm"])
   end
 end
