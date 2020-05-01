@@ -21,8 +21,9 @@ defmodule Mix.Tasks.Graphql.ValidateQueryTest do
     end
 
     test "validates is schema string is given" do
-      schema_string = "\ntype Author {\n firstName: String\n  lastName: String\n  }\n  type Query {\n author(id: Int!): Author\n  }\n"
-      query_string = "{ __typename }"
+      schema_path = "./test/support/example_schema.json"
+      schema_string = File.read!(schema_path)
+      query_string = "{ __schema { types { name } } }"
 
       output = capture_io(fn ->
         Mix.Tasks.Graphql.ValidateQuery.run(["-s", schema_string, query_string])
@@ -32,18 +33,11 @@ defmodule Mix.Tasks.Graphql.ValidateQueryTest do
     end
 
     test "validates if schema file is given" do
-      schema_string = "\ntype Author {\n firstName: String\n  lastName: String\n  }\n  type Query {\n author(id: Int!): Author\n  }\n"
-      random_file = :crypto.strong_rand_bytes(5) |> Base.url_encode64() |> binary_part(0, 5)
-      schema_file = "./tmp-schema-" <> random_file <> ".json"
-      File.write!(schema_file, schema_string)
-      query_string = "{ __typename }"
+      schema_file = "./test/support/example_schema.json"
+      query_string = "{ __schema { types { name } } }"
 
       output = capture_io(fn ->
         Mix.Tasks.Graphql.ValidateQuery.run(["-f", schema_file, query_string])
-      end)
-
-      on_exit(fn ->
-        File.exists?(schema_file) && File.rm!(schema_file)
       end)
 
       assert output =~ "Valid!"

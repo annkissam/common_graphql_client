@@ -20,25 +20,27 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
 
     # When query is valid
     iex> alias CommonGraphqlClient.StaticValidator.NpmGraphql
-    iex> schema_string = "\\ntype Author {\\n firstName: String\\n  lastName: String\\n  }\\n  type Query {\\n author(id: Int!): Author\\n  }\\n"
-    iex> query_string = "{ __typename }"
+    iex> schema_path = "./test/support/example_schema.json"
+    iex> schema_string = File.read!(schema_path)
+    iex> query_string = "{ __schema { types { name } } }"
     iex> NpmGraphql.validate(query_string, schema_string)
     :ok
 
     # When query is invalid
     iex> alias CommonGraphqlClient.StaticValidator.NpmGraphql
-    iex> schema_string = "\\ntype Author {\\n firstName: String\\n  lastName: String\\n  }\\n  type Query {\\n author(id: Int!): Author\\n  }\\n"
+    iex> schema_path = "./test/support/example_schema.json"
+    iex> schema_string = File.read!(schema_path)
     iex> query_string = "bad query string"
     iex> {:error, error} = NpmGraphql.validate(query_string, schema_string)
     iex> Regex.match?(~r/Unexpected Name \\"bad\\"/, error)
     true
 
     # When schema is invalid
-    iex> schema_string = "bad schema"
     iex> alias CommonGraphqlClient.StaticValidator.NpmGraphql
-    iex> query_string = "{ __typename }"
+    iex> schema_string = "bad schema"
+    iex> query_string = "{ __schema { types { name } } }"
     iex> {:error, error} = NpmGraphql.validate(query_string, schema_string)
-    iex> Regex.match?(~r/Unexpected Name \\"bad\\"/, error)
+    iex> Regex.match?(~r/bad\sschema/, error)
     true
   """
   @impl true
