@@ -40,7 +40,7 @@ jobs:
       - run:
           name: APT Installs (npm, node)
           command: |
-            sudo apt-get install nodejs npm
+            sudo apt-get install nodejs
       - run:
           name: Run tests
           command: mix test
@@ -93,7 +93,7 @@ jobs:
       - run:
           name: APT Installs (npm, node)
           command: |
-            sudo apt-get install nodejs npm
+            sudo apt-get install nodejs
       - run:
           name: Analyze coverage
           command: mix coveralls
