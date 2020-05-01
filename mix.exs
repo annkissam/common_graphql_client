@@ -1,7 +1,7 @@
 defmodule CommonGraphqlClient.MixProject do
   use Mix.Project
 
-  @version "0.4.0"
+  @version "0.5.0"
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
