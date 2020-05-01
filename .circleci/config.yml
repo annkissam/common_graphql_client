@@ -32,21 +32,6 @@ jobs:
             - app
             - .mix
 
-  test:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: APT Installs (npm, node)
-          command: |
-              apk add nodejs=6.2.0-r0
-      - run:
-          name: Run tests
-          command: mix test
-      - store_test_results:
-          path: _build/test/junit
-
   credo:
     <<: *defaults
     steps:
@@ -85,17 +70,24 @@ jobs:
   #         name: Run dialyzer
   #         command: mix dialyzer
 
-  coverage:
+  test_and_coverage:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/
       - run:
-          name: APT Installs (npm, node)
+          name: Install node
           command: |
-              apk add nodejs=6.2.0-r0
+            curl -sL https://deb.nodesource.com/setup_13.x | sudo bash -
+            sudo apt-get install -y nodejs
+            node -v
       - run:
-          name: Analyze coverage
+          name: Install npm
+          command: |
+            curl -L https://npmjs.org/install.sh | sudo sh
+            npm -v
+      - run:
+          name: Test & Analyze coverage
           command: mix coveralls
 
 workflows:
@@ -103,16 +95,13 @@ workflows:
   continuous_integration:
     jobs:
       - build
-      - test:
-          requires:
-            - build
       - credo:
           requires:
             - build
       # - dialyzer:
       #     requires:
       #       - build
-      - coverage:
+      - test_and_coverage:
           requires:
             - build
       - check_formatted:
