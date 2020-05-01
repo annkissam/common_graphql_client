@@ -6,9 +6,10 @@ defmodule Mix.Tasks.Graphql.ValidateQueryTest do
 
   describe "run/1" do
     test "prints help" do
-      output = capture_io(fn ->
-        Mix.Tasks.Graphql.ValidateQuery.run(["-h"])
-      end)
+      output =
+        capture_io(fn ->
+          Mix.Tasks.Graphql.ValidateQuery.run(["-h"])
+        end)
 
       assert output =~ "mix graphql.validate_query"
       assert output =~ "Usage:"
@@ -25,9 +26,10 @@ defmodule Mix.Tasks.Graphql.ValidateQueryTest do
       schema_string = File.read!(schema_path)
       query_string = "{ __schema { types { name } } }"
 
-      output = capture_io(fn ->
-        Mix.Tasks.Graphql.ValidateQuery.run(["-s", schema_string, query_string])
-      end)
+      output =
+        capture_io(fn ->
+          Mix.Tasks.Graphql.ValidateQuery.run(["-s", schema_string, query_string])
+        end)
 
       assert output =~ "Valid!"
     end
@@ -36,9 +38,10 @@ defmodule Mix.Tasks.Graphql.ValidateQueryTest do
       schema_file = "./test/support/example_schema.json"
       query_string = "{ __schema { types { name } } }"
 
-      output = capture_io(fn ->
-        Mix.Tasks.Graphql.ValidateQuery.run(["-f", schema_file, query_string])
-      end)
+      output =
+        capture_io(fn ->
+          Mix.Tasks.Graphql.ValidateQuery.run(["-f", schema_file, query_string])
+        end)
 
       assert output =~ "Valid!"
     end

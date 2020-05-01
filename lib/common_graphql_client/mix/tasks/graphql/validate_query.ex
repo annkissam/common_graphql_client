@@ -81,8 +81,7 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
   """
   def run(args) do
     try do
-      {opts, parsed, _} =
-        OptionParser.parse(args, switches: @switches, aliases: @aliases)
+      {opts, parsed, _} = OptionParser.parse(args, switches: @switches, aliases: @aliases)
 
       params =
         @default_opts
@@ -98,30 +97,36 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
   end
 
   defp process_options(%{help: true}, []) do
-    Mix.shell().info @info
+    Mix.shell().info(@info)
   end
 
   defp process_options(%{file: path, validation_strategy: validation}, [query]) do
     validation = String.to_atom(validation)
+
     case StaticValidator.validate(query, validation, schema_path: path) do
-      :ok -> Mix.shell().info "Valid!"
+      :ok ->
+        Mix.shell().info("Valid!")
+
       {:error, error} ->
-        Mix.raise """
+        Mix.raise("""
           Invalid query:
           #{error}
-        """
+        """)
     end
   end
 
   defp process_options(%{schema: str, validation_strategy: validation}, [query]) do
     validation = String.to_atom(validation)
+
     case StaticValidator.validate(query, validation, schema_string: str) do
-      :ok -> Mix.shell().info "Valid!"
+      :ok ->
+        Mix.shell().info("Valid!")
+
       {:error, error} ->
-        Mix.raise """
+        Mix.raise("""
           Invalid query:
           #{error}
-        """
+        """)
     end
   end
 
@@ -130,10 +135,10 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
   end
 
   def mix_raise do
-    Mix.raise """
+    Mix.raise("""
     Bad options or arguments. Refer to help page
 
     #{@info}
-    """
+    """)
   end
 end
