@@ -65,7 +65,7 @@ defmodule CommonGraphqlClient.MixProject do
       maintainers: @maintainers,
       licenses: ["MIT"],
       links: %{github: @url},
-      files: ["lib", "mix.exs", "README*", "LICENSE*", "CHANGELOG.md"]
+      files: ["lib", "priv", "mix.exs", "README*", "LICENSE*", "CHANGELOG.md"]
     ]
   end
 
