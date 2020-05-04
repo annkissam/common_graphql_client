@@ -26,28 +26,36 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
 
   Option                   Alias        Description
   --------------------------------------------------------------------------
-  --validation-strategy     -v          Validation strategy to validate the
-                                        query:
-                                        Defaults to npm_graphql
-                                        Currently only supports: npm_graphql
-
   --file                    -f          File path for schema.json
-                                        Either file path or schema string is
-                                        required
-
-  --schema                  -s          Schema json raw string
                                         Either file path or schema string is
                                         required
 
   --help                    -h          Prints this info
 
+  --schema                  -s          Schema json raw string
+                                        Either file path or schema string is
+                                        required
+
+  --validation-strategy     -v          Validation strategy to validate the
+                                        query:
+                                        Defaults to npm_graphql
+                                        Currently only supports: npm_graphql
+
+  --vars                   NO-ALIAS     Document variables for the query in
+                                        encoded JSON format.
+                                        This is a `:keep` type argument where
+                                        you can pass multiple of these for
+                                        multiple variables. Example:
+                                        #{@tsk} --vars {\"key\": \"value\"} --vars {\"key2\": \"value2\"}
+
   """
 
   @switches [
-    validation_strategy: :string,
     file: :string,
+    help: :boolean,
     schema: :string,
-    help: :boolean
+    validation_strategy: :string,
+    vars: :keep
   ]
 
   @aliases [
@@ -58,7 +66,8 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
   ]
 
   @default_opts [
-    validation_strategy: "npm_graphql"
+    validation_strategy: "npm_graphql",
+    vars: [Jason.encode!(%{})]
   ]
 
   alias CommonGraphqlClient.StaticValidator
@@ -83,6 +92,12 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
     try do
       {opts, parsed, _} = OptionParser.parse(args, switches: @switches, aliases: @aliases)
 
+      vars_list = opts |> Keyword.get_values(:vars)
+      opts =
+        opts
+        |> Keyword.delete(:vars)
+        |> Keyword.put(:vars, vars_list)
+
       params =
         @default_opts
         |> Keyword.merge(opts)
@@ -100,10 +115,27 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
     Mix.shell().info(@info)
   end
 
-  defp process_options(%{file: path, validation_strategy: validation}, [query]) do
-    validation = String.to_atom(validation)
+  defp process_options(%{file: path} = opts, [query]) do
+    validation_strategy =
+      opts
+      |> Map.get(:validation_strategy)
+      |> String.to_atom()
 
-    case StaticValidator.validate(query, validation, schema_path: path) do
+    variables =
+      opts
+      |> Map.get(:vars)
+      |> Enum.map(&Jason.decode!/1)
+      |> Enum.reduce(%{}, &Map.merge/2)
+
+    opts =
+      opts
+      |> Map.delete(:file)
+      |> Map.delete(:vars)
+      |> Map.put(:validation_strategy, validation_strategy)
+      |> Map.put(:variables, variables)
+      |> Map.put(:schema_path, path)
+
+    case StaticValidator.validate(query, opts) do
       :ok ->
         Mix.shell().info("Valid!")
 
@@ -115,10 +147,27 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
     end
   end
 
-  defp process_options(%{schema: str, validation_strategy: validation}, [query]) do
-    validation = String.to_atom(validation)
+  defp process_options(%{schema: str} = opts, [query]) do
+    validation_strategy =
+      opts
+      |> Map.get(:validation_strategy)
+      |> String.to_atom()
 
-    case StaticValidator.validate(query, validation, schema_string: str) do
+    variables =
+      opts
+      |> Map.get(:vars)
+      |> Enum.map(&Jason.decode!/1)
+      |> Enum.reduce(%{}, &Map.merge/2)
+
+    opts =
+      opts
+      |> Map.delete(:schema)
+      |> Map.delete(:vars)
+      |> Map.put(:validation_strategy, validation_strategy)
+      |> Map.put(:variables, variables)
+      |> Map.put(:schema_string, str)
+
+    case StaticValidator.validate(query, opts) do
       :ok ->
         Mix.shell().info("Valid!")
 

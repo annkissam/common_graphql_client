@@ -15,6 +15,8 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
   This method takes:
   * a `query_string`: A graphql query string
   * a `schema_string`: Contents on graphql schema to validate the query for
+  * Options: validate options include:
+    - `variables`: Document variable values for the query (needs to be a `Map`)
 
   ## Examples:
 
@@ -44,12 +46,12 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
     true
   """
   @impl true
-  def validate(query_string, schema_string) do
+  def validate(query_string, schema_string, opts \\ %{}) do
     with :ok <- check_node(),
          # there is a chance that this might be the case
          :ok <- check_npm(),
          :ok <- npm_install() do
-      node_run_validation(query_string, schema_string)
+      node_run_validation(query_string, schema_string, opts)
     else
       {:error, error} -> {:error, error}
     end
@@ -76,14 +78,23 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
     end
   end
 
-  defp node_run_validation(query_string, schema_string) do
+  defp node_run_validation(query_string, schema_string, opts) do
+    document_variables =
+      opts
+      |> Map.get(:variables, %{})
+      |> Jason.encode!()
+
     result =
       System.cmd(
         "node",
         [node_file_path()],
         cd: node_path(),
         stderr_to_stdout: true,
-        env: [{"SCHEMA_STRING", schema_string}, {"QUERY_STRING", query_string}]
+        env: [
+          {"DOCUMENT_VARIABLES", document_variables},
+          {"QUERY_STRING", query_string},
+          {"SCHEMA_STRING", schema_string}
+        ]
       )
 
     case result do

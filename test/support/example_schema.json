@@ -13,8 +13,35 @@
           "description": null,
           "fields": [
             {
+              "args": [
+                {
+                  "defaultValue": null,
+                  "description": null,
+                  "name": "id",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  }
+                }
+              ],
+              "deprecationReason": null,
+              "description": "Get a user",
+              "isDeprecated": false,
               "name": "user",
-              "description": null,
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              }
+            },
+            {
+              "name": "users",
+              "description": "List users",
               "args": [],
               "type": {
                 "kind": "NON_NULL",

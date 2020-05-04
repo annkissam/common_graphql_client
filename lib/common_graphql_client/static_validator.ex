@@ -9,13 +9,13 @@ defmodule CommonGraphqlClient.StaticValidator do
 
   This method takes:
   * a `query_string`: A graphql query string
-  * `validation_strategy`: Way to validate schema. Could be done in multiple
-    ways:
-    - `:npm_graphql` (needs `npm` cli) Uses npm calls to validate query
-    - `:native` (todo: parse schema in elixir) Will validate in pure elixir
   * Options: Options for validation include:
     - `schema_string`: Contents on graphql schema to validate the query for
     - `schema_path`: Path to the file containing graphql schema
+    - `validation_strategy`: Way to validate schema. Could be done in multiple
+    ways:
+      * `:npm_graphql` (needs `npm` cli) Uses npm calls to validate query
+      * `:native` (todo: parse schema in elixir) Will validate in pure elixir
 
   ## Examples:
 
@@ -73,24 +73,30 @@ defmodule CommonGraphqlClient.StaticValidator do
     iex> CommonGraphqlClient.StaticValidator.validate(query_string, validation_strategy, schema_string: schema_string)
     ** (RuntimeError) Not implemented
   """
-  @spec validate(String.t(), atom(), Keyword.t()) :: :ok | {:error, term()}
-  def validate(query_string, mod, opts)
+  @spec validate(String.t(), Map.t()) :: :ok | {:error, term()}
+  def validate(query_string, opts)
 
-  def validate(query_string, validation_strategy, schema_path: schema_path) do
+  def validate(query_string, %{schema_path: schema_path} = opts) do
     case File.read(schema_path) do
       {:ok, contents} ->
-        validate(query_string, validation_strategy, schema_string: contents)
+        opts =
+          opts
+          |> Map.delete(:schema_path)
+          |> Map.put(:schema_string, contents)
+
+        validate(query_string, opts)
 
       {:error, error} ->
         {:error, error}
     end
   end
 
-  def validate(query_string, :npm_graphql, schema_string: schema_string) do
-    __MODULE__.NpmGraphql.validate(query_string, schema_string)
-  end
-
-  def validate(_query_string, :native, _opts) do
-    raise "Not implemented"
+  def validate(query_string, %{schema_string: schema_string} = opts) do
+    case Map.get(opts, :validation_strategy) do
+      :npm_graphql ->
+        __MODULE__.NpmGraphql.validate(query_string, schema_string, opts)
+      _ ->
+        raise "Not Implemented"
+    end
   end
 end
