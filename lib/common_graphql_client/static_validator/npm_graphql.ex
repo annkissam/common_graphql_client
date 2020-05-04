@@ -44,6 +44,25 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
     iex> {:error, error} = NpmGraphql.validate(query_string, schema_string)
     iex> Regex.match?(~r/bad\sschema/, error)
     true
+
+    # When query variables are passed
+    iex> alias CommonGraphqlClient.StaticValidator.NpmGraphql
+    iex> schema_path = "./test/support/example_schema.json"
+    iex> schema_string = File.read!(schema_path)
+    iex> query_string = "
+    ...>   query getUser($id: ID!) {
+    ...>     user(id: $id) {
+    ...>       id
+    ...>     }
+    ...>   }
+    ...> "
+    iex> variables = %{id: 1}
+    iex> NpmGraphql.validate(
+    ...>   query_string,
+    ...>   schema_string,
+    ...>   %{variables: variables}
+    ...> )
+    :ok
   """
   @impl true
   def validate(query_string, schema_string, opts \\ %{}) do
