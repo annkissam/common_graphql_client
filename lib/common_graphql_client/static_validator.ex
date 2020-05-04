@@ -25,8 +25,8 @@ defmodule CommonGraphqlClient.StaticValidator do
     iex> validation_strategy = :npm_graphql
     iex> CommonGraphqlClient.StaticValidator.validate(
     ...>   query_string,
-    ...>   validation_strategy,
-    ...>   schema_path: schema_path
+    ...>   %{ validation_strategy: validation_strategy,
+    ...>      schema_path: schema_path }
     ...> )
     :ok
 
@@ -37,8 +37,8 @@ defmodule CommonGraphqlClient.StaticValidator do
     iex> validation_strategy = :npm_graphql
     iex> CommonGraphqlClient.StaticValidator.validate(
     ...>   query_string,
-    ...>   validation_strategy,
-    ...>   schema_string: schema_string
+    ...>   %{ validation_strategy: validation_strategy,
+    ...>      schema_string: schema_string }
     ...> )
     :ok
 
@@ -48,8 +48,8 @@ defmodule CommonGraphqlClient.StaticValidator do
     iex> validation_strategy = :npm_graphql
     iex> {:error, error} = CommonGraphqlClient.StaticValidator.validate(
     ...>   query_string,
-    ...>   validation_strategy,
-    ...>   schema_path: schema_path
+    ...>   %{ validation_strategy: validation_strategy,
+    ...>      schema_path: schema_path }
     ...> )
     iex> Regex.match?(~r/Unexpected Name \\"bad\\"/, error)
     true
@@ -60,8 +60,8 @@ defmodule CommonGraphqlClient.StaticValidator do
     iex> validation_strategy = :npm_graphql
     iex> {:error, error} = CommonGraphqlClient.StaticValidator.validate(
     ...>   query_string,
-    ...>   validation_strategy,
-    ...>   schema_string: schema_string
+    ...>   %{ validation_strategy: validation_strategy,
+    ...>      schema_string: schema_string }
     ...> )
     iex> Regex.match?(~r/bad\sschema/, error)
     true
@@ -70,8 +70,12 @@ defmodule CommonGraphqlClient.StaticValidator do
     iex> schema_string = "someschema"
     iex> query_string = "somequery"
     iex> validation_strategy = :native
-    iex> CommonGraphqlClient.StaticValidator.validate(query_string, validation_strategy, schema_string: schema_string)
-    ** (RuntimeError) Not implemented
+    iex> CommonGraphqlClient.StaticValidator.validate(
+    ...>   query_string,
+    ...>   %{ validation_strategy: validation_strategy,
+    ...>      schema_string: schema_string }
+    ...> )
+    ** (RuntimeError) Not Implemented
   """
   @spec validate(String.t(), Map.t()) :: :ok | {:error, term()}
   def validate(query_string, opts)
