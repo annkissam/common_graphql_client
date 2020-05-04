@@ -1,44 +1,54 @@
 defmodule CommonGraphqlClient.MixProject do
   use Mix.Project
 
-  @version "0.3.3"
+  @version "0.5.0"
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
-    "Eric Sullivan"
+    "Eric Sullivan",
+    "Adi Iyengar"
   ]
 
   def project do
     [
-      app: :common_graphql_client,
-      version: @version,
-      elixir: "~> 1.6",
-      start_permanent: Mix.env() == :prod,
-      deps: deps(),
       aliases: aliases(),
+      app: :common_graphql_client,
+      deps: deps(),
       description: "Elixir GraphQL Client with HTTP and WebSocket Support",
       docs: docs(),
+      elixir: "~> 1.6",
+      preferred_cli_env: [
+        analysis: :test,
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
+      homepage_url: @url,
       package: package(),
       source_url: @url,
-      homepage_url: @url
+      start_permanent: Mix.env() == :prod,
+      test_coverage: [tool: ExCoveralls],
+      version: @version
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       extra_applications: [:logger]
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:absinthe_websocket, "~> 0.2.2", optional: true},
+      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev, :test], runtime: false},
       {:ecto, "~> 2.2 or ~> 3.0", optional: true},
       {:ecto_sql, "~> 3.0", optional: true},
-      {:httpoison, "~> 1.1", optional: true},
-      {:ex_doc, "~> 0.10", only: :dev}
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.10", only: [:test]},
+      {:httpoison, "~> 1.1", optional: true}
     ]
   end
 

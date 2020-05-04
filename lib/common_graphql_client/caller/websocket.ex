@@ -1,5 +1,7 @@
 if Code.ensure_loaded?(AbsintheWebSocket) do
   defmodule CommonGraphQLClient.Caller.WebSocket do
+    @moduledoc false
+
     @behaviour CommonGraphQLClient.CallerBehaviour
 
     @impl CommonGraphQLClient.CallerBehaviour

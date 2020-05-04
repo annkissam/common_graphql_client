@@ -1,4 +1,6 @@
 defmodule CommonGraphQLClient.ClientBehaviour do
+  @moduledoc false
+
   @callback list(atom()) :: {:ok, any} | {:error, any}
   @callback list!(atom()) :: any | no_return()
 

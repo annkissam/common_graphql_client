@@ -2,6 +2,8 @@
 
 An Elixir libary for generating GraphQL clients. Adapters are provided for both HTTP (using [HTTPoison](https://github.com/edgurgel/httpoison)) and WebSockets (using [AbsintheWebSocket](https://github.com/annkissam/absinthe_websocket)). Both adapters support GraphQL queries, whereas WebSockets are required for subscriptions.
 
+This library also supports client-side query validation using `nodejs`.
+
 ## Documentation
 
 Docs can be found at [https://hexdocs.pm/common_graphql_client](https://hexdocs.pm/common_graphql_client).
@@ -376,3 +378,51 @@ defmodule MyAppWeb.UserSocket do
   end
 end
 ```
+
+## Client-side Query Validation (using schema introspection result)
+
+Query validation can be done at the client-side using schema introspection
+result to get closer to real integration tests without having to run a graphql
+server.
+
+This can be done using the mix task:
+
+`$ mix graphql.validate_query -f schema.json <raw-query>`
+`$ mix graphql.validate_query -f schema.json $(cat <query.graphql-path>)`
+
+For more usage options try the help command:
+
+`$ mix graphql.validate_query -h`
+
+If you don't want to use the mix task, validation can be done at a module level
+by explicitly calling the static validator module:
+
+```elixir
+schema_path = "path/to/schema.json"
+query_string = "{ __schema { types { name } } }"
+validation_strategy = :npm_graphql
+CommonGraphqlClient.StaticValidator.validate(
+  query_string,
+  %{validation_strategy: validation_strategy,
+    schema_path: schema_path}
+)
+# => :ok | {:error, error}
+```
+
+Schema validation can be done using validation strategies. The default
+validation strategy is using `:npm-graphql`. This requires npm and node binaries
+to be available (which is for most of the phoenix development environment)
+
+For more information on this check out the documentation and examples for
+[`CommonGraphqlClient.StaticValidator.NpmGraphql`](https://hexdocs.pm/common_graphql_client/CommonGraphQLClient.StaticValidator.NpmGraphql.html#content)
+
+### Using npm-graphql
+
+This uses `npm` and `node` commands to run schema validation. Make sure you
+have `npm` and `node` installed.
+
+
+### Using native elixir
+
+This strategy will use native elixir for performing the validation.
+This is work in progress

@@ -1,6 +1,5 @@
 defmodule CommonGraphQLClient.Client do
-  @moduledoc """
-  """
+  @moduledoc false
 
   defmacro __using__(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
