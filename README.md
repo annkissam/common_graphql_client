@@ -388,6 +388,7 @@ server.
 This can be done using the mix task:
 
 `$ mix graphql.validate_query -f schema.json <raw-query>`
+`$ mix graphql.validate_query -f schema.json $(cat <query.graphql-path>)`
 
 For more usage options try the help command:
 
@@ -402,8 +403,8 @@ query_string = "{ __schema { types { name } } }"
 validation_strategy = :npm_graphql
 CommonGraphqlClient.StaticValidator.validate(
   query_string,
-  validation_strategy,
-  schema_path: schema_path
+  %{validation_strategy: validation_strategy,
+    schema_path: schema_path}
 )
 # => :ok | {:error, error}
 ```
@@ -412,6 +413,8 @@ Schema validation can be done using validation strategies. The default
 validation strategy is using `:npm-graphql`. This requires npm and node binaries
 to be available (which is for most of the phoenix development environment)
 
+For more information on this check out the documentation and examples for
+[`CommonGraphqlClient.StaticValidator.NpmGraphql`](https://hexdocs.pm/common_graphql_client/CommonGraphQLClient.StaticValidator.NpmGraphql.html#content)
 
 ### Using npm-graphql
 
