@@ -93,6 +93,7 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
       {opts, parsed, _} = OptionParser.parse(args, switches: @switches, aliases: @aliases)
 
       vars_list = opts |> Keyword.get_values(:vars)
+
       opts =
         opts
         |> Keyword.delete(:vars)

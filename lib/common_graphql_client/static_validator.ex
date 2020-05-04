@@ -99,6 +99,7 @@ defmodule CommonGraphqlClient.StaticValidator do
     case Map.get(opts, :validation_strategy) do
       :npm_graphql ->
         __MODULE__.NpmGraphql.validate(query_string, schema_string, opts)
+
       _ ->
         raise "Not Implemented"
     end

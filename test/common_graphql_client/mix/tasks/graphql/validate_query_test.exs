@@ -48,8 +48,8 @@ defmodule Mix.Tasks.Graphql.ValidateQueryTest do
 
     test "validates query with document_variables" do
       schema_file = "./test/support/example_schema.json"
-      query_string =
-        """
+
+      query_string = """
         query getUser($id: ID!) {
           user(id: $id) {
             id
@@ -57,12 +57,13 @@ defmodule Mix.Tasks.Graphql.ValidateQueryTest do
         }
       """
 
-
       output =
         capture_io(fn ->
           Mix.Tasks.Graphql.ValidateQuery.run([
-            "-f", schema_file,
-            "--vars", Jason.encode!(%{"id" => 1}),
+            "-f",
+            schema_file,
+            "--vars",
+            Jason.encode!(%{"id" => 1}),
             query_string
           ])
         end)
