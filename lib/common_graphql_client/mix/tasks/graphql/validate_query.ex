@@ -81,12 +81,12 @@ defmodule Mix.Tasks.Graphql.ValidateQuery do
 
   ## Example:
 
-    # When query is valid
-    iex> schema_path = "./test/support/example_schema.json"
-    iex> schema_string = File.read!(schema_path)
-    iex> query_string = "{ __schema { types { name } } }"
-    iex> Mix.Tasks.Graphql.ValidateQuery.run(["-s", schema_string, query_string])
-    :ok
+      # When query is valid
+      iex> schema_path = "./test/support/example_schema.json"
+      iex> schema_string = File.read!(schema_path)
+      iex> query_string = "{ __schema { types { name } } }"
+      iex> Mix.Tasks.Graphql.ValidateQuery.run(["-s", schema_string, query_string])
+      :ok
   """
   def run(args) do
     try do
