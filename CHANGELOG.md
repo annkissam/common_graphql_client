@@ -1,7 +1,7 @@
 # Changelog
 
 ## v0.6.0
-- [PR 16](https://github.com/annkissam/common_graphql_client/pull/16)
+- [PR 17](https://github.com/annkissam/common_graphql_client/pull/17)
 Dynamic http api token and url support (Breaking change)
 
 ## v0.5.0
