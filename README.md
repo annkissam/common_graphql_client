@@ -4,6 +4,24 @@ An Elixir libary for generating GraphQL clients. Adapters are provided for both 
 
 This library also supports client-side query validation using `nodejs`.
 
+## Contents
+
+- [Documentation](#documentation)
+- [Installation](#Installation)
+- [Context](#Context)
+- [Client](#Client)
+- [Ecto Schemas](#Ecto-Schemas)
+- [GraphQL Queries](#GraphQL-Queries)
+- [GraphQL Subscriptions](#GraphQL-Subscriptions)
+- [Security](#Security)
+    * [Client Security](#Client-Security)
+    * [HTTP Server](#HTTP-Server)
+    * [WebSocket Server](#WebSocket-Server)
+- [Client Query Validation](#Client-Query-Validation)
+    * [Using NPM](#Using-Npm)
+    * [Using Native Elixir](#Using-Native-Elixir)
+
+
 ## Documentation
 
 Docs can be found at [https://hexdocs.pm/common_graphql_client](https://hexdocs.pm/common_graphql_client).
@@ -17,7 +35,7 @@ Add `common_graphql_client` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:common_graphql_client, "~> 0.1.0"},
+    {:common_graphql_client, "~> 0.6.0"},
     {:httpoison, "~> 1.1"},            # If using HTTP queries
     {:absinthe_websocket, "~> 0.2.0"}, # If using WebSocket subscriptions (or WebSocket queries)
   ]
@@ -261,7 +279,7 @@ end
 
 ## Security
 
-### Client
+### Client Security
 
 The HTTP Client can send `Bearer` tokens, whereas the WebSocket can send a token as a query param. Since these credentials should not be in source control, this library provides a way to set them at runtime. First, update the Mix config:
 
@@ -379,7 +397,9 @@ defmodule MyAppWeb.UserSocket do
 end
 ```
 
-## Client-side Query Validation (using schema introspection result)
+## Client Query Validation
+
+- (using schema introspection result)
 
 Query validation can be done at the client-side using schema introspection
 result to get closer to real integration tests without having to run a graphql
@@ -416,13 +436,13 @@ to be available (which is for most of the phoenix development environment)
 For more information on this check out the documentation and examples for
 [`CommonGraphqlClient.StaticValidator.NpmGraphql`](https://hexdocs.pm/common_graphql_client/CommonGraphQLClient.StaticValidator.NpmGraphql.html#content)
 
-### Using npm-graphql
+### Using Npm
 
 This uses `npm` and `node` commands to run schema validation. Make sure you
 have `npm` and `node` installed.
 
 
-### Using native elixir
+### Using Native Elixir
 
 This strategy will use native elixir for performing the validation.
 This is work in progress

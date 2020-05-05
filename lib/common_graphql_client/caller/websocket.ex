@@ -31,8 +31,8 @@ if Code.ensure_loaded?(AbsintheWebSocket) do
       {AbsintheWebSocket.Supervisor,
        [
          subscriber: client.mod(),
-         url: client.websocket_api_url(),
-         token: client.websocket_api_token(),
+         url: client.websocket_api_url(opts),
+         token: client.websocket_api_token(opts),
          base_name: base_name,
          async: Keyword.get(opts, :async, true)
        ]}
