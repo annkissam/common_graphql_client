@@ -14,11 +14,11 @@ if Code.ensure_loaded?(HTTPoison) do
         |> Poison.encode!()
 
       case HTTPoison.post(
-             client.http_api_url(),
+             client.http_api_url(opts),
              body,
              [
                {"Content-Type", "application/json"},
-               {"authorization", "Bearer #{client.http_api_token()}"}
+               {"authorization", "Bearer #{client.http_api_token(opts)}"}
              ],
              Keyword.get(opts, :http_opts, [])
            ) do

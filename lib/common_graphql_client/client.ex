@@ -72,19 +72,19 @@ defmodule CommonGraphQLClient.Client do
         end
       end
 
-      def http_api_token do
+      def http_api_token(_opts \\ []) do
         config(:http_api_token)
       end
 
-      def http_api_url do
+      def http_api_url(_opts \\ []) do
         config(:http_api_url)
       end
 
-      def websocket_api_token do
+      def websocket_api_token(_opts \\ []) do
         config(:websocket_api_token)
       end
 
-      def websocket_api_url do
+      def websocket_api_url(_opts \\ []) do
         config(:websocket_api_url)
       end
 
@@ -235,8 +235,10 @@ defmodule CommonGraphQLClient.Client do
       defoverridable handle: 2,
                      handle: 3,
                      handle_subscribe_to: 2,
-                     http_api_token: 0,
-                     websocket_api_token: 0
+                     http_api_token: 1,
+                     http_api_url: 1,
+                     websocket_api_token: 1,
+                     websocket_api_url: 1
     end
   end
 end
