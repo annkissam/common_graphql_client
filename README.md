@@ -6,20 +6,20 @@ This library also supports client-side query validation using `nodejs`.
 
 ## Contents
 
-- [Documentation](##documentation)
-- [Installation](##Installation)
-- [Context](##Context)
-- [Client](##Client)
-- [Ecto Schemas](##Ecto-Schemas)
-- [GraphQL Queries](##GraphQL-Queries)
-- [GraphQL Subscriptions](##GraphQL-Subscriptions)
-- [Security](##Security)
-    * [Client](###Client)
-    * [HTTP Server](###HTTP-Server)
-    * [WebSocket Server](###WebSocket-Server)
-- [Client Query Validation](##Client-Query-Validation)
-    * [Using NPM](###Using-Npm)
-    * [Using Native Elixir](###Using-Native-Elixir)
+- [Documentation](#documentation)
+- [Installation](#Installation)
+- [Context](#Context)
+- [Client](#Client)
+- [Ecto Schemas](#Ecto-Schemas)
+- [GraphQL Queries](#GraphQL-Queries)
+- [GraphQL Subscriptions](#GraphQL-Subscriptions)
+- [Security](#Security)
+    * [Client Security](#Client-Security)
+    * [HTTP Server](#HTTP-Server)
+    * [WebSocket Server](#WebSocket-Server)
+- [Client Query Validation](#Client-Query-Validation)
+    * [Using NPM](#Using-Npm)
+    * [Using Native Elixir](#Using-Native-Elixir)
 
 
 ## Documentation
@@ -279,7 +279,7 @@ end
 
 ## Security
 
-### Client
+### Client Security
 
 The HTTP Client can send `Bearer` tokens, whereas the WebSocket can send a token as a query param. Since these credentials should not be in source control, this library provides a way to set them at runtime. First, update the Mix config:
 
