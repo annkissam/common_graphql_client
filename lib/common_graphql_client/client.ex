@@ -237,6 +237,7 @@ defmodule CommonGraphQLClient.Client do
                      handle_subscribe_to: 2,
                      http_api_token: 1,
                      http_api_url: 1,
+                     resolve_response: 3,
                      websocket_api_token: 1,
                      websocket_api_url: 1
     end
