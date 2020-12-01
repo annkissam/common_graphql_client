@@ -46,7 +46,7 @@ defmodule CommonGraphqlClient.MixProject do
       {:dialyxir, "~> 1.0.0-rc.7", only: [:dev, :test], runtime: false},
       {:ecto, "~> 2.2 or ~> 3.0", optional: true},
       {:ecto_sql, "~> 3.0", optional: true},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: [:test]},
       {:httpoison, "~> 1.1", optional: true}
     ]
