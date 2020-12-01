@@ -65,7 +65,16 @@ defmodule CommonGraphqlClient.MixProject do
       maintainers: @maintainers,
       licenses: ["MIT"],
       links: %{github: @url},
-      files: ["lib", "priv/npm/npm_graphql.js", "priv/npm/package-lock.json", "priv/npm/package.json", "mix.exs", "README*", "LICENSE*", "CHANGELOG.md"]
+      files: [
+        "lib",
+        "priv/npm/npm_graphql.js",
+        "priv/npm/package-lock.json",
+        "priv/npm/package.json",
+        "mix.exs",
+        "README*",
+        "LICENSE*",
+        "CHANGELOG.md"
+      ]
     ]
   end
 

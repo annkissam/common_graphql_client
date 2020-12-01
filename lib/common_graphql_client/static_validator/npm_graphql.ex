@@ -125,8 +125,12 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
       )
 
     case result do
-      {_output, 0} -> :ok
-      {error, 1} -> {:error, error}
+      {_output, 0} ->
+        :ok
+
+      {error, 1} ->
+        {:error, error}
+
       _ ->
         raise inspect(result)
     end
@@ -151,8 +155,12 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
       )
 
     case result do
-      {_output, 0} -> :ok
-      {error, 1} -> {:error, error}
+      {_output, 0} ->
+        :ok
+
+      {error, 1} ->
+        {:error, error}
+
       _ ->
         raise inspect(result)
     end
