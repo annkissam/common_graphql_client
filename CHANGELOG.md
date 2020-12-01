@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.2
+Bump `graphql` (^15.4.0) & `graphql-tools` (^7.0.2) devDependencies
+
 ## v0.6.0
 - [PR 17](https://github.com/annkissam/common_graphql_client/pull/17)
 Dynamic http api token and url support (Breaking change)
