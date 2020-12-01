@@ -8,7 +8,6 @@ defmodule CommonGraphqlClient.StaticValidator.ValidationStrategy do
   """
   @callback validate(
               query_string :: String.t(),
-              schema_string :: String.t(),
               opts :: Map.t()
             ) :: :ok | {:error, term()}
 end
