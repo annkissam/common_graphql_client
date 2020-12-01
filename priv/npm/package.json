@@ -4,7 +4,9 @@
   "description": "Validate GraphQL schema from CLI",
   "author": "",
   "devDependencies": {
-    "graphql": "^15.0.0",
-    "graphql-tools": "^5.0.0"
-  }
+    "graphql": "^15.4.0",
+    "graphql-tools": "^7.0.2"
+  },
+  "repository": "https://github.com/annkissam/common_graphql_client",
+  "license": "MIT"
 }

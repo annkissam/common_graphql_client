@@ -20,12 +20,19 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
 
   ## Examples:
 
-      # When query is valid
+      # When query is valid (schema_string)
       iex> alias CommonGraphqlClient.StaticValidator.NpmGraphql
       iex> schema_path = "./test/support/example_schema.json"
       iex> schema_string = File.read!(schema_path)
       iex> query_string = "{ __schema { types { name } } }"
-      iex> NpmGraphql.validate(query_string, schema_string)
+      iex> NpmGraphql.validate(query_string, %{schema_string: schema_string})
+      :ok
+
+      # When query is valid (schema_path)
+      iex> alias CommonGraphqlClient.StaticValidator.NpmGraphql
+      iex> schema_path = "./test/support/example_schema.json"
+      iex> query_string = "{ __schema { types { name } } }"
+      iex> NpmGraphql.validate(query_string, %{schema_path: schema_path})
       :ok
 
       # When query is invalid
@@ -33,7 +40,7 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
       iex> schema_path = "./test/support/example_schema.json"
       iex> schema_string = File.read!(schema_path)
       iex> query_string = "bad query string"
-      iex> {:error, error} = NpmGraphql.validate(query_string, schema_string)
+      iex> {:error, error} = NpmGraphql.validate(query_string, %{schema_string: schema_string})
       iex> Regex.match?(~r/Unexpected Name \\"bad\\"/, error)
       true
 
@@ -41,8 +48,8 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
       iex> alias CommonGraphqlClient.StaticValidator.NpmGraphql
       iex> schema_string = "bad schema"
       iex> query_string = "{ __schema { types { name } } }"
-      iex> {:error, error} = NpmGraphql.validate(query_string, schema_string)
-      iex> Regex.match?(~r/bad\sschema/, error)
+      iex> {:error, error} = NpmGraphql.validate(query_string, %{schema_string: schema_string})
+      iex> Regex.match?(~r/SyntaxError/, error)
       true
 
       # When query variables are passed
@@ -59,18 +66,20 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
       iex> variables = %{id: 1}
       iex> NpmGraphql.validate(
       ...>   query_string,
-      ...>   schema_string,
-      ...>   %{variables: variables}
+      ...>   %{schema_string: schema_string, variables: variables}
       ...> )
       :ok
   """
   @impl true
-  def validate(query_string, schema_string, opts \\ %{}) do
+  def validate(query_string, opts \\ %{}) do
+    node_run_validation(query_string, opts)
+  end
+
+  def initialize do
     with :ok <- check_node(),
-         # there is a chance that this might be the case
          :ok <- check_npm(),
          :ok <- npm_install() do
-      node_run_validation(query_string, schema_string, opts)
+      :ok
     else
       {:error, error} -> {:error, error}
     end
@@ -97,7 +106,7 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
     end
   end
 
-  defp node_run_validation(query_string, schema_string, opts) do
+  defp node_run_validation(query_string, %{schema_path: schema_path} = opts) do
     document_variables =
       opts
       |> Map.get(:variables, %{})
@@ -107,7 +116,36 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
       System.cmd(
         "node",
         [node_file_path()],
-        cd: node_path(),
+        stderr_to_stdout: true,
+        env: [
+          {"DOCUMENT_VARIABLES", document_variables},
+          {"QUERY_STRING", query_string},
+          {"SCHEMA_PATH", schema_path}
+        ]
+      )
+
+    case result do
+      {_output, 0} ->
+        :ok
+
+      {error, 1} ->
+        {:error, error}
+
+      _ ->
+        raise inspect(result)
+    end
+  end
+
+  defp node_run_validation(query_string, %{schema_string: schema_string} = opts) do
+    document_variables =
+      opts
+      |> Map.get(:variables, %{})
+      |> Jason.encode!()
+
+    result =
+      System.cmd(
+        "node",
+        [node_file_path()],
         stderr_to_stdout: true,
         env: [
           {"DOCUMENT_VARIABLES", document_variables},
@@ -117,8 +155,14 @@ defmodule CommonGraphqlClient.StaticValidator.NpmGraphql do
       )
 
     case result do
-      {_output, 0} -> :ok
-      {error, 1} -> {:error, error}
+      {_output, 0} ->
+        :ok
+
+      {error, 1} ->
+        {:error, error}
+
+      _ ->
+        raise inspect(result)
     end
   end
 

@@ -63,7 +63,7 @@ defmodule CommonGraphqlClient.StaticValidator do
       ...>   %{ validation_strategy: validation_strategy,
       ...>      schema_string: schema_string }
       ...> )
-      iex> Regex.match?(~r/bad\sschema/, error)
+      iex> Regex.match?(~r/SyntaxError/, error)
       true
 
       # When validation_strategy is native
@@ -78,27 +78,12 @@ defmodule CommonGraphqlClient.StaticValidator do
       ** (RuntimeError) Not Implemented
   """
   @spec validate(String.t(), Map.t()) :: :ok | {:error, term()}
-  def validate(query_string, opts)
+  def validate(query_string, opts \\ %{})
 
-  def validate(query_string, %{schema_path: schema_path} = opts) do
-    case File.read(schema_path) do
-      {:ok, contents} ->
-        opts =
-          opts
-          |> Map.delete(:schema_path)
-          |> Map.put(:schema_string, contents)
-
-        validate(query_string, opts)
-
-      {:error, error} ->
-        {:error, error}
-    end
-  end
-
-  def validate(query_string, %{schema_string: schema_string} = opts) do
-    case Map.get(opts, :validation_strategy) do
+  def validate(query_string, opts) do
+    case Map.get(opts, :validation_strategy, :npm_graphql) do
       :npm_graphql ->
-        __MODULE__.NpmGraphql.validate(query_string, schema_string, opts)
+        __MODULE__.NpmGraphql.validate(query_string, opts)
 
       _ ->
         raise "Not Implemented"

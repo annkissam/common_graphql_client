@@ -1,7 +1,7 @@
 defmodule CommonGraphqlClient.MixProject do
   use Mix.Project
 
-  @version "0.6.1"
+  @version "0.6.3"
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
@@ -46,7 +46,7 @@ defmodule CommonGraphqlClient.MixProject do
       {:dialyxir, "~> 1.0.0-rc.7", only: [:dev, :test], runtime: false},
       {:ecto, "~> 2.2 or ~> 3.0", optional: true},
       {:ecto_sql, "~> 3.0", optional: true},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: [:test]},
       {:httpoison, "~> 1.1", optional: true}
     ]
@@ -65,7 +65,16 @@ defmodule CommonGraphqlClient.MixProject do
       maintainers: @maintainers,
       licenses: ["MIT"],
       links: %{github: @url},
-      files: ["lib", "priv", "mix.exs", "README*", "LICENSE*", "CHANGELOG.md"]
+      files: [
+        "lib",
+        "priv/npm/npm_graphql.js",
+        "priv/npm/package-lock.json",
+        "priv/npm/package.json",
+        "mix.exs",
+        "README*",
+        "LICENSE*",
+        "CHANGELOG.md"
+      ]
     ]
   end
 
