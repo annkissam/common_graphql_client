@@ -1,7 +1,7 @@
 # Changelog
 
 ## v.0.6.3
-- [PR 18](https://github.com/annkissam/common_graphql_client/pull/18)
+- [PR 19](https://github.com/annkissam/common_graphql_client/pull/19)
 Update `StaticValidator.NpmGraphql` to accept `schema_path` or `schema_string`
 
 ## v0.6.2
