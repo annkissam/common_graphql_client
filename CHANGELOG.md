@@ -1,7 +1,7 @@
 # Changelog
 
 ## v.0.6.4
-- [PR ]()
+- [PR 24](https://github.com/annkissam/common_graphql_client/pull/24)
 Add Tesla caller `CommonGraphQLClient.Caller.HttpTesla`
 
 ## v.0.6.3
