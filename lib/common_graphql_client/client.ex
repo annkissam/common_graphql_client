@@ -232,6 +232,10 @@ defmodule CommonGraphQLClient.Client do
       defp log_errors(errors),
         do: Logger.warn("Errors in reply: #{inspect(errors)}")
 
+      def connection(_opts) do
+        raise("No connection specified for opts: #{inspect(opts)}")
+      end
+
       defoverridable handle: 2,
                      handle: 3,
                      handle_subscribe_to: 2,
@@ -239,7 +243,8 @@ defmodule CommonGraphQLClient.Client do
                      http_api_url: 1,
                      resolve_response: 3,
                      websocket_api_token: 1,
-                     websocket_api_url: 1
+                     websocket_api_url: 1,
+                     connection: 1
     end
   end
 end

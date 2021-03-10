@@ -1,7 +1,7 @@
 defmodule CommonGraphqlClient.MixProject do
   use Mix.Project
 
-  @version "0.6.3"
+  @version "0.6.4"
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
@@ -48,7 +48,9 @@ defmodule CommonGraphqlClient.MixProject do
       {:ecto_sql, "~> 3.0", optional: true},
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: [:test]},
-      {:httpoison, "~> 1.1", optional: true}
+      {:httpoison, "~> 1.1", optional: true},
+      {:jason, ">= 1.0.0"},
+      {:tesla, "~> 1.4.0", optional: true},
     ]
   end
 
