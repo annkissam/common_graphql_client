@@ -1,5 +1,9 @@
 # Changelog
 
+## v.0.6.4
+- [PR 24](https://github.com/annkissam/common_graphql_client/pull/24)
+Add Tesla caller `CommonGraphQLClient.Caller.HttpTesla`
+
 ## v.0.6.3
 - [PR 19](https://github.com/annkissam/common_graphql_client/pull/19)
 Update `StaticValidator.NpmGraphql` to accept `schema_path` or `schema_string`

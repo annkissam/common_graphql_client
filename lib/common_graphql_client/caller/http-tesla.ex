@@ -1,6 +1,24 @@
-if Code.ensure_loaded?(HTTPoison) do
-  defmodule CommonGraphQLClient.Caller.Http do
-    @moduledoc false
+if Code.ensure_loaded?(Tesla) do
+  defmodule CommonGraphQLClient.Caller.HttpTesla do
+    @moduledoc """
+    Tesla GraphQL Adapter
+
+    Add to the client:
+
+      def connection(opts) do
+        token = http_api_token(opts)
+
+        middleware = [
+          {Tesla.Middleware.Headers, [{"Authorization", "Bearer " <> token}]},
+          {Tesla.Middleware.Headers, [{"Content-Type", "application/json"}]},
+          {Tesla.Middleware.Timeout, timeout: 60_000}
+        ]
+
+        adapter = {Tesla.Adapter.Finch, name: MyAppFinch}
+
+        Tesla.client(middleware, adapter)
+      end
+    """
 
     @behaviour CommonGraphQLClient.CallerBehaviour
 
@@ -13,16 +31,11 @@ if Code.ensure_loaded?(HTTPoison) do
         }
         |> Jason.encode!()
 
-      case HTTPoison.post(
-             client.http_api_url(opts),
-             body,
-             [
-               {"Content-Type", "application/json"},
-               {"authorization", "Bearer #{client.http_api_token(opts)}"}
-             ],
-             Keyword.get(opts, :http_opts, [])
-           ) do
-        {:ok, %{body: json_body, status_code: 200}} ->
+      connection = Keyword.get_lazy(opts, :connection, fn -> client.connection(opts) end)
+      url = client.http_api_url(opts)
+
+      case Tesla.post(connection, url, body) do
+        {:ok, %{body: json_body, status: 200}} ->
           case Jason.decode(json_body) do
             {:ok, body} ->
               {:ok, body["data"], body["errors"]}
