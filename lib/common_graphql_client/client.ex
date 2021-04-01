@@ -232,7 +232,7 @@ defmodule CommonGraphQLClient.Client do
       defp log_errors(errors),
         do: Logger.warn("Errors in reply: #{inspect(errors)}")
 
-      def connection(_opts) do
+      def connection(opts) do
         raise("No connection specified for opts: #{inspect(opts)}")
       end
 
