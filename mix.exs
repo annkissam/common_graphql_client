@@ -13,6 +13,7 @@ defmodule CommonGraphqlClient.MixProject do
     [
       aliases: aliases(),
       app: :common_graphql_client,
+      name: "CGC",
       deps: deps(),
       description: "Elixir GraphQL Client with HTTP and WebSocket Support",
       docs: docs(),
@@ -24,9 +25,7 @@ defmodule CommonGraphqlClient.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      homepage_url: @url,
       package: package(),
-      source_url: @url,
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
       version: @version
@@ -46,7 +45,7 @@ defmodule CommonGraphqlClient.MixProject do
       {:dialyxir, "~> 1.0.0-rc.7", only: [:dev, :test], runtime: false},
       {:ecto, "~> 2.2 or ~> 3.0", optional: true},
       {:ecto_sql, "~> 3.0", optional: true},
-      {:ex_doc, "~> 0.23", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: [:test]},
       {:httpoison, "~> 1.1", optional: true},
       {:jason, ">= 1.0.0"},
@@ -56,8 +55,16 @@ defmodule CommonGraphqlClient.MixProject do
 
   def docs do
     [
-      extras: ["README.md", "CHANGELOG.md"],
-      source_ref: "v#{@version}"
+      extras: [
+        "CHANGELOG.md": [],
+        "LICENSE.md": [title: "License"],
+        "README.md": [title: "Overview"],
+      ],
+      main: "readme",
+      homepage_url: @url,
+      source_url: @url,
+      source_ref: "v#{@version}",
+      formatters: ["html"]
     ]
   end
 
