@@ -1,6 +1,14 @@
-# CommonGraphqlClient
+# CommonGraphqlClient (CGC)
 
-An Elixir libary for generating GraphQL clients. Adapters are provided for both HTTP (using [HTTPoison](https://github.com/edgurgel/httpoison)) and WebSockets (using [AbsintheWebSocket](https://github.com/annkissam/absinthe_websocket)). Both adapters support GraphQL queries, whereas WebSockets are required for subscriptions.
+[![Module Version](https://img.shields.io/hexpm/v/common_graphql_client.svg)](https://hex.pm/packages/common_graphql_client)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/common_graphql_client/)
+[![Total Download](https://img.shields.io/hexpm/dt/common_graphql_client.svg)](https://hex.pm/packages/common_graphql_client)
+[![License](https://img.shields.io/hexpm/l/common_graphql_client.svg)](https://github.com/annkissam/common_graphql_client/blob/master/LICENSE.md)
+[![Last Updated](https://img.shields.io/github/last-commit/annkissam/common_graphql_client.svg)](https://github.com/annkissam/common_graphql_client/commits/master)
+
+An Elixir library for generating GraphQL clients.
+
+Adapters are provided for both HTTP (using [HTTPoison](https://github.com/edgurgel/httpoison)) and WebSockets (using [AbsintheWebSocket](https://github.com/annkissam/absinthe_websocket)). Both adapters support GraphQL queries, whereas WebSockets are required for subscriptions.
 
 This library also supports client-side query validation using `nodejs`.
 
@@ -30,7 +38,7 @@ A complete walkthrough can be found on the [Annkissam Alembic](https://www.annki
 
 ## Installation
 
-Add `common_graphql_client` to your list of dependencies in `mix.exs`:
+Add `:common_graphql_client` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -446,3 +454,10 @@ have `npm` and `node` installed.
 
 This strategy will use native elixir for performing the validation.
 This is work in progress
+
+## Copyright and License
+
+Copyright (c) 2018 Annkissam
+
+This work is free. You can redistribute it and/or modify it under the
+terms of the MIT License. See the [LICENSE.md](./LICENSE.md) file for more details.
