@@ -89,9 +89,6 @@ jobs:
             curl -L https://npmjs.org/install.sh | sudo sh
             npm -v
       - run:
-          name: Install npm packages
-          command: npm install
-      - run:
           name: Test & Analyze coverage
           command: mix coveralls
 
