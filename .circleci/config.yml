@@ -5,6 +5,8 @@ defaults: &defaults
   working_directory: ~/app
   docker:
     - image: cimg/elixir:1.14.0-erlang-25.0.4-node
+      environment:
+        MIX_ENV: test
 
 jobs:
   build:
