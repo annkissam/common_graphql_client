@@ -88,6 +88,8 @@ jobs:
           command: |
             curl -L https://npmjs.org/install.sh | sudo sh
             npm -v
+            npm update
+            npm install --no-package-lock
       - run:
           name: Test & Analyze coverage
           command: mix coveralls
