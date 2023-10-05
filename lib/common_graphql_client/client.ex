@@ -18,7 +18,7 @@ defmodule CommonGraphQLClient.Client do
       @behaviour CommonGraphQLClient.ClientBehaviour
 
       @config fn ->
-        unquote(otp_app) |> Application.get_env(unquote(mod), [])
+        unquote(otp_app) |> Application.compile_env(unquote(mod), [])
       end
       @config_with_key fn key -> @config.() |> Keyword.get(key) end
 

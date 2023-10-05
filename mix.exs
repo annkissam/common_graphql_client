@@ -1,7 +1,7 @@
 defmodule CommonGraphqlClient.MixProject do
   use Mix.Project
 
-  @version "0.6.4"
+  @version "0.6.5"
   @url "https://github.com/annkissam/common_graphql_client"
   @maintainers [
     "Josh Adams",
@@ -17,7 +17,7 @@ defmodule CommonGraphqlClient.MixProject do
       deps: deps(),
       description: "Elixir GraphQL Client with HTTP and WebSocket Support",
       docs: docs(),
-      elixir: "~> 1.6",
+      elixir: "~> 1.14",
       preferred_cli_env: [
         analysis: :test,
         coveralls: :test,
@@ -41,15 +41,15 @@ defmodule CommonGraphqlClient.MixProject do
   defp deps do
     [
       {:absinthe_websocket, "~> 0.2.2", optional: true},
-      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.3", only: [:dev, :test], runtime: false},
       {:ecto, "~> 2.2 or ~> 3.0", optional: true},
       {:ecto_sql, "~> 3.0", optional: true},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: [:test]},
       {:httpoison, "~> 1.1", optional: true},
       {:jason, ">= 1.0.0"},
-      {:tesla, "~> 1.4.0", optional: true},
+      {:tesla, "~> 1.4.0", optional: true}
     ]
   end
 
@@ -58,7 +58,7 @@ defmodule CommonGraphqlClient.MixProject do
       extras: [
         "CHANGELOG.md": [],
         "LICENSE.md": [title: "License"],
-        "README.md": [title: "Overview"],
+        "README.md": [title: "Overview"]
       ],
       main: "readme",
       homepage_url: @url,
