@@ -1,13 +1,5 @@
 version: 2.1
 
-orbs:
-  gcp-gcr: circleci/gcp-gcr@0.15.0
-
-executors:
-  gcloud-executor:
-    docker:
-      - image: ericsullivan9/python-gcloud:3.7
-
 defaults: &defaults
   parallelism: 1
   working_directory: ~/app
@@ -96,9 +88,6 @@ jobs:
           command: |
             curl -L https://npmjs.org/install.sh | sudo sh
             npm -v
-      - run:
-          name: Where is graphql module?
-          command: ls ~/priv/npm
       - run:
           name: Test & Analyze coverage
           command: mix coveralls
