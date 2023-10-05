@@ -97,6 +97,9 @@ jobs:
             curl -L https://npmjs.org/install.sh | sudo sh
             npm -v
       - run:
+          name: Where is graphql module?
+          command: ls ~/priv/npm
+      - run:
           name: Test & Analyze coverage
           command: mix coveralls
 
