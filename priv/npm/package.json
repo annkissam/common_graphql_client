@@ -5,7 +5,7 @@
   "author": "",
   "devDependencies": {
     "graphql": "^15.4.0",
-    "graphql-tools": "^7.0.2"
+    "graphql-tools": "^9.0.0"
   },
   "repository": "https://github.com/annkissam/common_graphql_client",
   "license": "MIT"
